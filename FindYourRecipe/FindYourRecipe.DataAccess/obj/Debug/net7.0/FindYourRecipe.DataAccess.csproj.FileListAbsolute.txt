@@ -1,0 +1,12 @@
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/bin/Debug/net7.0/FindYourRecipe.DataAccess.deps.json
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/bin/Debug/net7.0/FindYourRecipe.DataAccess.dll
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/bin/Debug/net7.0/FindYourRecipe.DataAccess.pdb
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.csproj.AssemblyReference.cache
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.AssemblyInfoInputs.cache
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.AssemblyInfo.cs
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.csproj.CoreCompileInputs.cache
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.dll
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/refint/FindYourRecipe.DataAccess.dll
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/FindYourRecipe.DataAccess.pdb
+/Users/rebeca/Desktop/FindYourRecipeProject/FindYourRecipe/FindYourRecipe.DataAccess/obj/Debug/net7.0/ref/FindYourRecipe.DataAccess.dll

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Jn0XcJp4dtaxABQnGfNa8hB2So+Za54MDb+qnitgfSk=",
+  "Source": "FindYourRecipe.Api",
+  "BasePath": "_content/FindYourRecipe.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -4,8 +4,14 @@ namespace FindYourRecipe.DataAccess.Interfaces
 	public interface IPhotoDataContext
 	{
 		public Photo GetById(int id);
+
+		public List<Photo> GetByRecipeId(int recipeId);
+
 		public void Detele(int id);
-		public Photo Update(int photoId, string link);
-	}
+
+		public Photo Create(int recipeId, string link);
+
+        public bool Exists(int id);
+    }
 }
 

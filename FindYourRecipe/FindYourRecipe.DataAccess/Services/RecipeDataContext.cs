@@ -11,7 +11,7 @@ namespace FindYourRecipe.DataAccess.Services
             Database = database;
         }
 
-        public Recipe Create(string title, string description, string cuisine, string dificulty)
+        public Recipe Create(string title, string description, string cuisine, string dificulty, string recipeLink)
         {
             Recipe recipe = new Recipe()
             {
@@ -19,6 +19,7 @@ namespace FindYourRecipe.DataAccess.Services
                 Description = description,
                 Cuisine = cuisine,
                 Dificulty=dificulty,
+                RecipeLink=recipeLink,
             };
             Database.Add(recipe);
             Database.SaveChanges();
@@ -42,15 +43,37 @@ namespace FindYourRecipe.DataAccess.Services
             return Database.Recipes.Single(x=>x.Id==id);
         }
 
-        public Recipe Update(int id, string title, string description, string cuisine, string dificulty)
+        public Recipe Update(int id, string title, string description, string cuisine, string dificulty, string recipeLink)
         {
             Recipe toUpdate = GetById(id);
             toUpdate.Title = title;
             toUpdate.Description = description;
             toUpdate.Cuisine = cuisine;
             toUpdate.Dificulty = dificulty;
+            toUpdate.RecipeLink = recipeLink;
             Database.SaveChanges();
             return toUpdate;
+        }
+
+        public bool Exists(int id)
+        {
+            if (Database.Recipes.Any(p => p.Id == id))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public List<Recipe> GetByIngredients(List<int> ingredientIds)
+        {
+            var recipes = from recipe in Database.Recipes
+                          join ingredirntRecipe in Database.IngredientsRecipes on recipe.Id equals ingredirntRecipe.RecipeId
+                          where ingredientIds.Contains(ingredirntRecipe.IngredientId)
+                          group recipe by recipe into Recipes
+                          where Recipes.Count() >= ingredientIds.Count
+                          select Recipes.Key;
+            return recipes.ToList();
         }
     }
 }

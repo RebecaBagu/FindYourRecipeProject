@@ -7,9 +7,11 @@ namespace FindYourRecipe.DataAccess.Interfaces
 
 		public IngredientRecipe Create(int ingredientId, int recipeId, string quantity);
 
-		public IngredientRecipe Update(int id,int ingredientId, int recipeId, string quantity)
+		public IngredientRecipe Update(int id, int ingredientId, int recipeId, string quantity);
 
 		public void Delete(int id);
-	}
+
+        public bool Exists(int id);
+    }
 }
 

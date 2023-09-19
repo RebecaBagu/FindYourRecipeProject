@@ -1,6 +1,6 @@
 ﻿using System;
 using FindYourRecipe.DataAccess.Interfaces;
-using FindYourRecipe.DataAccess.Services;
+using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
@@ -9,9 +9,9 @@ namespace FindYourRecipe.Api.Controllers
 	[Route("[controller]")]
 	public class CategoryRecipeController :ControllerBase
 	{
-		ICategoryRecipeDataContext CategoryRecipeDataContext { get; }
+		ICategoryRecipeRepository CategoryRecipeDataContext { get; }
 
-        public CategoryRecipeController(ICategoryRecipeDataContext categoryRecipeDataContext)
+        public CategoryRecipeController(ICategoryRecipeRepository categoryRecipeDataContext)
 		{
 			CategoryRecipeDataContext = categoryRecipeDataContext;
 
@@ -20,15 +20,15 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpPost("Create")]
 		public IActionResult Create(int categoryId, int recipeId)
 		{
-			return Ok(CategoryRecipeDataContext.Create(categoryId, recipeId));
+			return Ok(CategoryRecipeDataContext.CreateAsync(categoryId, recipeId));
 		}
 
 		[HttpDelete("Delete/{id}")]
 		public IActionResult Delete(int id)
 		{
-			if (CategoryRecipeDataContext.Exists(id))
+			if (CategoryRecipeDataContext.ExistsAsync(id))
 			{
-				CategoryRecipeDataContext.Delete(id);
+				CategoryRecipeDataContext.DeleteAsync(id);
 				return Ok();
 			}
 			else

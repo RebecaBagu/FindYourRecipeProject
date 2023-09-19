@@ -1,64 +1,80 @@
 ﻿using System;
-using FindYourRecipe.Api.Dto;
+using FindYourRecipe.Application;
+using FindYourRecipe.Application.Models.Ingredients;
+using FindYourRecipe.Application.Services.Interfaces;
 using FindYourRecipe.DataAccess;
-using FindYourRecipe.DataAccess.Services;
+using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class RecipeController :ControllerBase
+	public class RecipesControllers :ControllerBase
 	{
-		IRecipeDataContext RecipeDataContext { get; }
-		public RecipeController(IRecipeDataContext recipeDataContext)
+		IRecipeService RecipeService { get; }
+		public RecipesControllers(IRecipeService recipeService)
 		{
-			RecipeDataContext = recipeDataContext;
-
+			RecipeService = recipeService;
 		}
 
-		[HttpGet("Get/{id}")]
-		public IActionResult GetById(int id)
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetByIdAsync(int id)
 		{
-			if (RecipeDataContext.Exists(id))
-				return Ok(RecipeDataContext.GetById(id));
-			else
+			try
+			{
+				return Ok(await RecipeService.GetByIdAsync(id));
+				
+			}
+			catch(NotFoundException)
+			{
 				return NotFound();
+			}
 			
 		}
 
-		[HttpGet("Get")]
-		public IActionResult Get()
+		[HttpGet]
+		public async Task<IActionResult> GetAsync()
 		{
-			return Ok(RecipeDataContext.Get());
+			return Ok(await RecipeService.GetAsync());
 		}
 
-		[HttpGet("GetByIngredients")]
-		public IActionResult GetRecipeByIngredients([FromQuery] List<int>ingredientIds)
+		[HttpGet]
+		public async Task<IActionResult> GetRecipeByIngredientsAsync([FromQuery] List<int>ingredientIds)
 		{
-			return Ok(RecipeDataContext.GetByIngredients(ingredientIds));
+			try
+			{
+				return Ok(await RecipeService.GetByIngredientsAsync(ingredientIds));
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
 		}
 
-		[HttpPost("Create")]
-		public IActionResult Create([FromQuery] RecipeCreateOrUpdateDto request)
+		[HttpPost]
+		public async Task<IActionResult> CreateAsync([FromQuery] CreateOrUpdateRecipeRequestModel request)
 		{
-			var recipe = RecipeDataContext.Create(request.Title, request.Description, request.Cuisine, request.Dificulty, request.RecipeLink);
-			return Ok(recipe);
+			return Ok(await RecipeService.CreateAsync(request));
         }
 
-		[HttpPut("Update/{id}")]
-		public IActionResult Update(int id, [FromQuery] RecipeCreateOrUpdateDto request)
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CreateOrUpdateRecipeRequestModel request)
 		{
-			if(RecipeDataContext.Exists(id))
-				return Ok(RecipeDataContext.Update(id, request.Title, request.Description, request.Cuisine, request.Dificulty, request.RecipeLink));
-			else
+			try
+			{
+				return Ok(await RecipeService.UpdateAsync(id, request));
+			}
+			catch (NotFoundException)
+			{
 				return NotFound();
+			}
 		}
 
 		[HttpDelete]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> DeleteAsync(int id)
 		{
-			RecipeDataContext.DeleteById(id);
+			await RecipeService.DeleteAsync(id);
 
             return Ok();
 		}

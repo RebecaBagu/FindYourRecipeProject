@@ -11,7 +11,20 @@ namespace FindYourRecipe.DataAccess
 		public DbSet<IngredientRecipe> IngredientsRecipes { get; set; }
 		public DbSet<Photo> Photos { get; set; }
 
-		public DataContext(DbContextOptions<DataContext> options) : base(options)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IngredientRecipe>().HasKey(sc => new { sc.RecipeId, sc.IngredientId });
+            modelBuilder.Entity<CategoryRecipe>().HasKey(sc => new { sc.RecipeId, sc.CategoryId });
+
+			modelBuilder.Entity<Photo>()
+				.HasOne<Recipe>(r => r.Recipe)
+				.WithMany(p => p.Photos)
+				.HasForeignKey(r => r.RecipeId);
+        }
+
+       
+
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
 		{
 
 		}

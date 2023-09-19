@@ -1,7 +1,7 @@
 ﻿using System;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
-using FindYourRecipe.DataAccess.Services;
+using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
@@ -10,9 +10,9 @@ namespace FindYourRecipe.Api.Controllers
 	[Route("[controller]")]
 	public class PhotoController :ControllerBase
 	{
-		IRecipeDataContext RecipeDataContext { get; }
-		IPhotoDataContext PhotoDataContext { get; }
-		public PhotoController(IPhotoDataContext photoDataContext, IRecipeDataContext recipeDataContext)
+		IRecipeRepository RecipeDataContext { get; }
+		IPhotoRepository PhotoDataContext { get; }
+		public PhotoController(IPhotoRepository photoDataContext, IRecipeRepository recipeDataContext)
 		{
 			PhotoDataContext = photoDataContext;
 			RecipeDataContext = recipeDataContext;
@@ -22,8 +22,8 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpGet("Get/{id}")]
 		public IActionResult GetById(int id)
 		{
-			if (PhotoDataContext.Exists(id))
-				return Ok(PhotoDataContext.GetById(id));
+			if (PhotoDataContext.ExistsAsync(id))
+				return Ok(PhotoDataContext.GetByIdAsync(id));
 			else
 				return NotFound();
 		}
@@ -31,9 +31,9 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpGet("Get/{recipeId}")]
 		public IActionResult GetByRecipeId(int recipeId)
 		{
-			if (RecipeDataContext.Exists(recipeId))
+			if (RecipeDataContext.ExistsAsync(recipeId))
 			{
-				return Ok(PhotoDataContext.GetByRecipeId(recipeId));
+				return Ok(PhotoDataContext.GetByRecipeIdAsync(recipeId));
 			}
 			else
 				return NotFound();
@@ -42,13 +42,13 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpPost("Create")]
 		public IActionResult Create(int recipeId, string link)
 		{
-			return Ok(PhotoDataContext.Create(recipeId, link));
+			return Ok(PhotoDataContext.CreateAsync(recipeId, link));
 		}
 
 		[HttpDelete("Delete/{id}")]
 		public IActionResult Delete(int id)
 		{
-			PhotoDataContext.Detele(id);
+			PhotoDataContext.DeteleAsync(id);
 			return Ok();
 		}
 	}

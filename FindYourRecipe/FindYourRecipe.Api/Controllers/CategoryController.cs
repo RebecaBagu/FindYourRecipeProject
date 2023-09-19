@@ -8,9 +8,9 @@ namespace FindYourRecipe.Api.Controllers
 	[Route("[controller]")]
 	public class CategoryController: ControllerBase
 	{
-		ICategoryDataContext CategoryDataContext { get; }
+		ICategoryRepository CategoryDataContext { get; }
 
-		public CategoryController(ICategoryDataContext categoryDataContext)
+		public CategoryController(ICategoryRepository categoryDataContext)
 		{
 			CategoryDataContext = categoryDataContext;
         }
@@ -18,8 +18,8 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpGet("Get/{id}")]
 		public IActionResult GetById(int id)
 		{
-			if (CategoryDataContext.Exists(id))
-				return Ok(CategoryDataContext.GetById(id));
+			if (CategoryDataContext.ExistsAsync(id))
+				return Ok(CategoryDataContext.GetByIdAsync(id));
 			else
 				return NotFound();
 		}
@@ -27,14 +27,14 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpPost("Create")]
 		public IActionResult Create(string name)
 		{
-			return Ok(CategoryDataContext.Create(name));
+			return Ok(CategoryDataContext.CreateAsync(name));
 		}
 
 		[HttpPut("Update/{id}")]
 		public IActionResult Update(int id, string name)
 		{
-			if (CategoryDataContext.Exists(id))
-				return Ok(CategoryDataContext.Update(id, name));
+			if (CategoryDataContext.ExistsAsync(id))
+				return Ok(CategoryDataContext.CreateAsync(id, name));
 			else
 				return NotFound();
 		}
@@ -42,9 +42,9 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpDelete("Delete/{id}")]
 		public IActionResult Delete(int id)
 		{
-			if (CategoryDataContext.Exists(id))
+			if (CategoryDataContext.ExistsAsync(id))
 			{
-				CategoryDataContext.Delete(id);
+				CategoryDataContext.DeleteAsync(id);
 
 				return Ok();
 			}

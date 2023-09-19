@@ -1,62 +1,80 @@
 ﻿using System;
-using FindYourRecipe.Api.Dto;
+using Azure.Core;
+using FindYourRecipe.Application;
+using FindYourRecipe.Application.Models.Ingredients;
+using FindYourRecipe.Application.Services.Interfaces;
 using FindYourRecipe.DataAccess.Interfaces;
-using FindYourRecipe.DataAccess.Services;
+using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class IngredientController : ControllerBase
+	public class IngredientsControllers : ControllerBase
 	{
-		IIngredientDataContext IngredientDataContext { get; }
-		public IngredientController(IIngredientDataContext ingredientDataContext)
+		IIngredientService IngredientService { get; }
+		public IngredientsControllers(IIngredientService ingredientService)
 		{
-			IngredientDataContext = ingredientDataContext;
+			IngredientService = ingredientService;
 		}
 
-		[HttpGet("Get/{id}")]
-		public IActionResult GetById(int id)
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetByIdAsync(int id)
 		{
-			if (IngredientDataContext.Exists(id))
-				return Ok(IngredientDataContext.GetById(id));
-			else
-				return NotFound();
-		}
-
-		[HttpGet("Get")]
-		public IActionResult Get()
-		{
-			return Ok(IngredientDataContext.Get());
-		}
-
-		[HttpPost("Create")]
-		public IActionResult Create([FromQuery] IngredientCreateOrUpdate request)
-		{
-			var ingredient = IngredientDataContext.Create(request.Name, request.Category);
-			return Ok(ingredient);
-		}
-
-		[HttpPut("Update/{id}")]
-		public IActionResult Update(int id, [FromQuery] IngredientCreateOrUpdate request)
-		{
-			if (IngredientDataContext.Exists(id))
-				return Ok(IngredientDataContext.Update(id, request.Name, request.Category));
-			else
-				return NotFound();
-		}
-
-		[HttpDelete("Delete/{id}")]
-		public IActionResult Delete(int id)
-		{
-			if (IngredientDataContext.Exists(id))
+			try
 			{
-				IngredientDataContext.DeleteById(id);
-				return Ok();
+				return Ok(await IngredientService.GetByIdAsync(id));
 			}
-			else
+			catch (NotFoundException)
+			{
 				return NotFound();
+			}
+		}
+
+
+		[HttpGet]
+		public async Task<IActionResult> GetAsync()
+		{
+			return Ok(await IngredientService.GetAsync());
+		}
+
+
+		[HttpPost]
+		public async Task<IActionResult> CreateAsync(CreateOrUpdateIngredientRequestModel request)
+		{
+			return Ok(await IngredientService.CreateAsync(request));
+		}
+
+		
+
+
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CreateOrUpdateIngredientRequestModel request)
+		{
+			try
+			{
+				return Ok(await IngredientService.UpdateAsync(id, request));
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
+		}
+
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteAsync(int id)
+		{
+            try
+            {
+				await IngredientService.DeleteAsync(id);
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
         }
 	}

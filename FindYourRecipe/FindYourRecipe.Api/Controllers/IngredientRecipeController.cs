@@ -9,8 +9,8 @@ namespace FindYourRecipe.Api.Controllers
 	[Route("[controller]")]
 	public class IngredientRecipeController: ControllerBase
 	{
-		IIngredientRecipeDataContext IngredientRecipeDataContext { get; }
-		public IngredientRecipeController(IIngredientRecipeDataContext ingredientRecipeDataContext)
+		IIngredientRecipeRepository IngredientRecipeDataContext { get; }
+		public IngredientRecipeController(IIngredientRecipeRepository ingredientRecipeDataContext)
 		{
 			IngredientRecipeDataContext = ingredientRecipeDataContext;
 		}
@@ -19,7 +19,7 @@ namespace FindYourRecipe.Api.Controllers
 		public IActionResult Update( int recipeId, int ingredientId, string quantity)
 		{
 			
-			var result = IngredientRecipeDataContext.Create( recipeId, ingredientId, quantity);
+			var result = IngredientRecipeDataContext.CreateAsync( recipeId, ingredientId, quantity);
 			return Ok(result);
 			
 		}
@@ -27,7 +27,7 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpDelete("Delete/{id}")]
 		public IActionResult Delete(int id)
 		{
-			IngredientRecipeDataContext.Delete(id);
+			IngredientRecipeDataContext.DeleteAsync(id);
 
             return Ok();
 		}

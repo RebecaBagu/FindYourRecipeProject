@@ -1,4 +1,7 @@
 ﻿using System;
+using FindYourRecipe.Application;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models.Request;
 using FindYourRecipe.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,50 +9,59 @@ namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class CategoryController: ControllerBase
+	public class CategoriesControllers: ControllerBase
 	{
-		ICategoryRepository CategoryDataContext { get; }
+		ICategoryService CategoryService { get; }
 
-		public CategoryController(ICategoryRepository categoryDataContext)
+		public CategoriesControllers(ICategoryService categoryService)
 		{
-			CategoryDataContext = categoryDataContext;
+			CategoryService = categoryService;
         }
 
-		[HttpGet("Get/{id}")]
-		public IActionResult GetById(int id)
+		[HttpGet("{id}")]
+		public async Task< IActionResult> GetByIdAsync(int id)
 		{
-			if (CategoryDataContext.ExistsAsync(id))
-				return Ok(CategoryDataContext.GetByIdAsync(id));
-			else
-				return NotFound();
-		}
-
-		[HttpPost("Create")]
-		public IActionResult Create(string name)
-		{
-			return Ok(CategoryDataContext.CreateAsync(name));
-		}
-
-		[HttpPut("Update/{id}")]
-		public IActionResult Update(int id, string name)
-		{
-			if (CategoryDataContext.ExistsAsync(id))
-				return Ok(CategoryDataContext.CreateAsync(id, name));
-			else
-				return NotFound();
-		}
-
-		[HttpDelete("Delete/{id}")]
-		public IActionResult Delete(int id)
-		{
-			if (CategoryDataContext.ExistsAsync(id))
+			try
 			{
-				CategoryDataContext.DeleteAsync(id);
+				return Ok(await CategoryService.GetByIdAsync(id));
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
+		}
 
+		[HttpPost]
+		public async Task<IActionResult> CreateAsync(CreateOrUpdateCategoryRequestModel request)
+		{
+			return Ok(await CategoryService.CreateAsync(request));
+		}
+
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateCategoryRequestModel request)
+		{
+			try
+			{
+				return Ok(await CategoryService.UpdateAsync(id, request));
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
+		}
+
+		[HttpDelete("{id}")]
+		public async Task< IActionResult> DeleteAsync(int id)
+		{
+			try
+			{
+				await CategoryService.DeleteAsync(id);
 				return Ok();
 			}
-			else
+			catch (NotFoundException)
+			{
 				return NotFound();
+			}
         }
 	}
 }

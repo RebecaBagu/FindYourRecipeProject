@@ -2,9 +2,10 @@
 using FindYourRecipe.DataAccess.Interfaces;
 using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
-using FindYourRecipe.Application.Services.Interfaces;
+using FindYourRecipe.Application.Services;
 using FindYourRecipe.Application.Services;
 using FindYourRecipe.Application;
+using FindYourRecipe.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,11 @@ builder.Services.AddScoped<ICategoryRecipeRepository, CategoryRecipeRepository>(
 builder.Services.AddScoped<IIngredientRecipeRepository, IngredientRecipeRepository>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<ICategoryRecipeService, CategoryRecipeService>();
+builder.Services.AddScoped<IIngredientRecipeService, IngredientRecipeService>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

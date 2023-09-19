@@ -1,7 +1,7 @@
 ﻿using System;
-using FindYourRecipe.Application.Models.Ingredients;
+using FindYourRecipe.Application.Models;
 
-namespace FindYourRecipe.Application.Services.Interfaces
+namespace FindYourRecipe.Application.Interfaces
 {
 
 	public interface IRecipeService

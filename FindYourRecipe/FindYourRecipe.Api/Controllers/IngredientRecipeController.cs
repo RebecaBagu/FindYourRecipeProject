@@ -1,35 +1,41 @@
 ﻿using System;
-using FindYourRecipe.DataAccess;
-using FindYourRecipe.DataAccess.Interfaces;
+using FindYourRecipe.Application;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class IngredientRecipeController: ControllerBase
+	public class IngredientsRecipesControllers: ControllerBase
 	{
-		IIngredientRecipeRepository IngredientRecipeDataContext { get; }
-		public IngredientRecipeController(IIngredientRecipeRepository ingredientRecipeDataContext)
+		IIngredientRecipeService IngredientRecipeService { get; }
+		public IngredientsRecipesControllers(IIngredientRecipeService ingredientRecipeService)
 		{
-			IngredientRecipeDataContext = ingredientRecipeDataContext;
+			IngredientRecipeService = ingredientRecipeService;
 		}
 
-		[HttpPut("Create")]
-		public IActionResult Update( int recipeId, int ingredientId, string quantity)
+		[HttpPut]
+		public async Task<IActionResult> CreateAsync( CreateIngredientRecipeRequestModel request)
 		{
-			
-			var result = IngredientRecipeDataContext.CreateAsync( recipeId, ingredientId, quantity);
-			return Ok(result);
+			return Ok(await IngredientRecipeService.CreateAsync(request));
 			
 		}
 
-		[HttpDelete("Delete/{id}")]
-		public IActionResult Delete(int id)
+		[HttpDelete("{id}")]
+		public async Task< IActionResult> DeleteAsync(int id)
 		{
-			IngredientRecipeDataContext.DeleteAsync(id);
+			try
+			{
+				await IngredientRecipeService.DeleteAsync(id);
+				return Ok();
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
 
-            return Ok();
 		}
 	}
 }

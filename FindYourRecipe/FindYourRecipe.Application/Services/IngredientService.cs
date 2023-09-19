@@ -1,7 +1,8 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Models.Ingredients;
-using FindYourRecipe.Application.Services.Interfaces;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models;
+using FindYourRecipe.Application.Services;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 using FindYourRecipe.DataAccess.Repositories;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FindYourRecipe.Application.Models.Ingredients
+namespace FindYourRecipe.Application.Models
 {
 	public class CreateCategoryRecipeRequestModel
 	{

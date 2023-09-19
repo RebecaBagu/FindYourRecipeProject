@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Models.Ingredients;
+using FindYourRecipe.Application.Models;
+using FindYourRecipe.Application.Models.Response;
 using FindYourRecipe.DataAccess;
 
 namespace FindYourRecipe.Application
@@ -13,6 +14,9 @@ namespace FindYourRecipe.Application
             CreateMap<Ingredient, IngredientResponseModel>();
 			CreateMap<Recipe, RecipeResponseModel>();
 			CreateMap<Photo, PhotoResponseModel>();
+			CreateMap<Category, CategoryResponseModel>();
+			CreateMap<IngredientRecipe, IngredientRecipeResponseModel>();
+			CreateMap<CategoryRecipe, CategoryRecipeResponseModel>();
 		}
 	}
 }

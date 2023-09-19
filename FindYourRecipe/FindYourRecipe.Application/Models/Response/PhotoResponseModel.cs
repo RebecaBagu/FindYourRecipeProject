@@ -1,5 +1,5 @@
 ﻿using System;
-namespace FindYourRecipe.Application.Models.Ingredients
+namespace FindYourRecipe.Application.Models
 {
 	public class PhotoResponseModel
 	{

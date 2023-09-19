@@ -1,4 +1,8 @@
 ﻿using System;
+using FindYourRecipe.Application;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models;
+using FindYourRecipe.Application.Services;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 using FindYourRecipe.DataAccess.Repositories;
@@ -8,48 +12,61 @@ namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class PhotoController :ControllerBase
+	public class PhotosControllers :ControllerBase
 	{
-		IRecipeRepository RecipeDataContext { get; }
-		IPhotoRepository PhotoDataContext { get; }
-		public PhotoController(IPhotoRepository photoDataContext, IRecipeRepository recipeDataContext)
+		IRecipeService RecipeService { get; }
+		IPhotoService PhotoService { get; }
+		public PhotosControllers(IPhotoService photoService, IRecipeService recipeService)
 		{
-			PhotoDataContext = photoDataContext;
-			RecipeDataContext = recipeDataContext;
+			PhotoService = photoService;
+			RecipeService = recipeService;
 
         }
 
-		[HttpGet("Get/{id}")]
-		public IActionResult GetById(int id)
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetByIdAsync(int id)
 		{
-			if (PhotoDataContext.ExistsAsync(id))
-				return Ok(PhotoDataContext.GetByIdAsync(id));
-			else
-				return NotFound();
-		}
-
-		[HttpGet("Get/{recipeId}")]
-		public IActionResult GetByRecipeId(int recipeId)
-		{
-			if (RecipeDataContext.ExistsAsync(recipeId))
+			try
 			{
-				return Ok(PhotoDataContext.GetByRecipeIdAsync(recipeId));
+				return Ok(await PhotoService.GetByIdAsync(id));
 			}
-			else
+			catch(NotFoundException)
+			{
 				return NotFound();
+			}
 		}
 
-		[HttpPost("Create")]
-		public IActionResult Create(int recipeId, string link)
+		[HttpGet("{recipeId}")]
+		public async Task<IActionResult> GetByRecipeIdAsync(int recipeId)
 		{
-			return Ok(PhotoDataContext.CreateAsync(recipeId, link));
+			try
+			{
+				return Ok(await PhotoService.GetByRecipeIdAsync(recipeId));
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
 		}
 
-		[HttpDelete("Delete/{id}")]
-		public IActionResult Delete(int id)
+		[HttpPost]
+		public async Task<IActionResult> CreateAsync(CreatePhotoRequestModel request)
 		{
-			PhotoDataContext.DeteleAsync(id);
-			return Ok();
+			return Ok(await PhotoService.CreateAsync(request));
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteAsync(int id)
+		{
+			try
+			{
+				await PhotoService.DeteleAsync(id);
+				return Ok();
+			}
+			catch (NotFoundException)
+			{
+				return NotFound();
+			}
 		}
 	}
 }

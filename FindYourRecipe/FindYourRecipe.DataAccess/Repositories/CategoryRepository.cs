@@ -28,7 +28,7 @@ namespace FindYourRecipe.DataAccess.Repositories
             return category;
         }
 
-        public async Task<Category> Update(int id, string name)
+        public async Task<Category> UpdateAsync(int id, string name)
         {
             Category toUpdate = await GetByIdAsync(id);
             toUpdate.Name = name;

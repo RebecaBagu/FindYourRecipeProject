@@ -1,4 +1,7 @@
 ﻿using System;
+using FindYourRecipe.Application;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models;
 using FindYourRecipe.DataAccess.Interfaces;
 using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -7,32 +10,34 @@ namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class CategoryRecipeController :ControllerBase
+	public class CategoriesRecipesControllers :ControllerBase
 	{
-		ICategoryRecipeRepository CategoryRecipeDataContext { get; }
+		ICategoryRecipeService CategoryRecipeService { get; }
 
-        public CategoryRecipeController(ICategoryRecipeRepository categoryRecipeDataContext)
+        public CategoriesRecipesControllers(ICategoryRecipeService categoryRecipeService)
 		{
-			CategoryRecipeDataContext = categoryRecipeDataContext;
+			CategoryRecipeService = categoryRecipeService;
 
         }
 
-		[HttpPost("Create")]
-		public IActionResult Create(int categoryId, int recipeId)
+		[HttpPost]
+		public async Task<IActionResult> CreateAsync(CreateCategoryRecipeRequestModel request)
 		{
-			return Ok(CategoryRecipeDataContext.CreateAsync(categoryId, recipeId));
+			return Ok(await CategoryRecipeService.CreateAsync(request));
 		}
 
-		[HttpDelete("Delete/{id}")]
-		public IActionResult Delete(int id)
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteAsync(int id)
 		{
-			if (CategoryRecipeDataContext.ExistsAsync(id))
+			try
 			{
-				CategoryRecipeDataContext.DeleteAsync(id);
+				await CategoryRecipeService.DeleteAsync(id);
 				return Ok();
 			}
-			else
+			catch (NotFoundException)
+			{
 				return NotFound();
+			}
 				
 		}
 	}

@@ -1,7 +1,8 @@
 ﻿using System;
 using FindYourRecipe.Application;
-using FindYourRecipe.Application.Models.Ingredients;
-using FindYourRecipe.Application.Services.Interfaces;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models;
+using FindYourRecipe.Application.Services;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,7 @@ namespace FindYourRecipe.Api.Controllers
 			return Ok(await RecipeService.GetAsync());
 		}
 
-		[HttpGet]
+		[HttpGet("by-ingredients")]
 		public async Task<IActionResult> GetRecipeByIngredientsAsync([FromQuery] List<int>ingredientIds)
 		{
 			try

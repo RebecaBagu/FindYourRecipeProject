@@ -1,8 +1,9 @@
 ﻿using System;
 using Azure.Core;
 using FindYourRecipe.Application;
-using FindYourRecipe.Application.Models.Ingredients;
-using FindYourRecipe.Application.Services.Interfaces;
+using FindYourRecipe.Application.Interfaces;
+using FindYourRecipe.Application.Models;
+using FindYourRecipe.Application.Services;
 using FindYourRecipe.DataAccess.Interfaces;
 using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;

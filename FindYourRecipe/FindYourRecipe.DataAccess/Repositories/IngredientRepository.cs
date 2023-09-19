@@ -27,7 +27,7 @@ namespace FindYourRecipe.DataAccess.Repositories
         public async Task DeleteByIdAsync(int id)
         {
             Database.Remove(await Database.Ingredients.FirstAsync(x => x.Id == id));
-            Database.SaveChangesAsync();
+            await Database.SaveChangesAsync();
         }
 
         public Task<List<Ingredient>> GetAsync()

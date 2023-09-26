@@ -1,7 +1,6 @@
 ﻿@page "/"
-@inject IJSRuntime JSRuntime
-@inject IIngredientService Ingredients
-@inject IRecipeService Recipes
+@inject IJSRuntime JS
+
 <PageTitle>Home</PageTitle>
 
 <div class="container p-5 " style=" text-align:center ;background-color: rgb(225, 215, 198); margin-top: 15px;">
@@ -29,20 +28,15 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             <h1 style="font-size: 20px;margin-bottom: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;Choose the ingredients you want to use in the recipe: </h1>
-            <select id="SearchBar" class="form-control" multiple="multiple">
-                @foreach (var ingredient in IngredientList)
-                {
-                    <option value="@ingredient.Id">@ingredient.Name</option>
-                }
+            <select id="SearchBar" name="states[]" class="form-control" multiple="multiple">
+                <option value="1">Apple</option>
+                <option value="2">Pasta</option>
             </select>
         </div>
         <div class="col-sm-2"></div>
     </div>
 </div>
 
-<div>
-
-</div>
 <div class="container" style="margin-top: 30px;">
     <div class="row">
         <div class="col-sm-5"></div>
@@ -52,36 +46,23 @@
         <div class="col-sm-5"></div>
     </div>
 </div>
-
-@code
-{
-    protected override void OnAfterRender(bool firstRender)
+@code{ protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        await base.OnAfterRenderAsync(firstRender);
+        await JS.InvokeVoidAsync("InitializeSearchBar");
+    }
+
+    public async Task<List<int>> GetIds()
+    {
+        return await JS.InvokeAsync<List<int>>("GetSearchBarValues");
+
+    }
+    public async Task SearchClick()
+    {
+        var ids= await GetIds();
+        foreach(var id in ids)
         {
-            JSRuntime.InvokeVoidAsync("InitializeSearchBar");
+            Console.WriteLine(id);
         }
     }
-
-    public async Task<List<int>> GetSelectedIngredientIds()
-    {
-        return await JSRuntime.InvokeAsync<List<int>>("GetSearchBarValues");
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        IngredientList.AddRange(await Ingredients.GetAsync());
-    }
-
-    private async Task SearchClick(MouseEventArgs arg)
-    {
-        var selectedIngredients = await GetSelectedIngredientIds();
-        var recipes = await Recipes.GetByIngredientsAsync(selectedIngredients);
-        foreach (var opt in recipes)
-            Console.WriteLine(opt.Id  + " " + opt.Title);
-    }
-
-    List<IngredientResponseModel> IngredientList = new List<IngredientResponseModel>();
 }
-

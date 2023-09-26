@@ -19,14 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FindYourRecipe.Contracts\FindYourRecipe.Contracts.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FindYourRecipe.Contracts\FindYourRecipe.Contracts.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>

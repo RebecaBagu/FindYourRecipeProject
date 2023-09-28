@@ -64,9 +64,16 @@
                     {
                         <img src="@photo.Link" />
                     }
-                <h5 class="card-titile" style="background-color: rgb(225, 215, 198)">&nbsp;@recipe.Title</h5>
+                    <h5 class="card-titile" style="background-color: rgb(225, 215, 198)">&nbsp;@recipe.Title</h5>
                     <p class="card-text" style="margin-left: 10px">Cuisine: @recipe.Cuisine</p>
                     <p class="card-text" style="margin-left: 10px"> @recipe.Description</p>
+                    <span class="card-text" style="margin-left:10px">
+                        @foreach (var categoryRecipe in recipe.CategoryRecipe)
+                        {
+                            var x = categoryRecipe.Category;
+                            <span>@x.Name</span>
+                        }
+                    </span>
                     <p class="card-text" style="margin-bottom:10px; margin-left:10px">Dificulty: @recipe.Dificulty</p>
                     <div class=" btn-group">
                         <a href="@recipe.RecipeLink" class="btn" style="background-color: rgb(225, 215, 198)" role="button">

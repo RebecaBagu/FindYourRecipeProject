@@ -33,7 +33,7 @@ namespace FindYourRecipe.Api.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAsync()
 		{
-			return Ok(await RecipeService.GetAsync());
+            return Ok(await RecipeService.GetAsync());
 		}
 
 		[HttpGet("by-ingredients")]
@@ -41,7 +41,7 @@ namespace FindYourRecipe.Api.Controllers
 		{
 			try
 			{
-				return Ok(await RecipeService.GetByIngredientsAsync(list));
+                return Ok(await RecipeService.GetByIngredientsAsync(list));
 			}
 			catch (NotFoundException)
 			{

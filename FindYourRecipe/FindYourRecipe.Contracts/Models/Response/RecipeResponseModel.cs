@@ -11,6 +11,9 @@ namespace FindYourRecipe.Contracts.Models
         public string RecipeLink { get; set; }
 
         public ICollection<PhotoResponseModel> Photos { get; set; }
+        public ICollection<CategoryRecipeResponseModel> CategoryRecipe { get; set; }
+        
+
     }
 }
 

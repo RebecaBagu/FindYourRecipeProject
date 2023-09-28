@@ -38,6 +38,7 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             return Database.Recipes
                 .Include(p => p.Photos)
+                .Include(p => p.CategoryRecipe).ThenInclude(p=>p.Category)  
                 .OrderBy(p => p.Id).ToListAsync();
         }
 
@@ -45,6 +46,7 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             return Database.Recipes
                 .Include(p => p.Photos)
+                .Include(p => p.CategoryRecipe).ThenInclude(p => p.Category)
                 .SingleAsync(x => x.Id == id);
         }
 
@@ -71,7 +73,7 @@ namespace FindYourRecipe.DataAccess.Repositories
         public async Task<List<Recipe>> GetByIngredientsAsync(List<int> ingredientIds)
         {
             if (ingredientIds.Count == 0)
-            {
+            { 
                 return await GetAsync();
             }
             else
@@ -85,6 +87,7 @@ namespace FindYourRecipe.DataAccess.Repositories
                 var recipesIds = await recipes.ToListAsync();
                 var selectedRecipes = Database.Recipes
                     .Include(x=>x.Photos)
+                    .Include(p => p.CategoryRecipe).ThenInclude(p => p.Category)
                     .Where(x => recipesIds
                     .Contains(x.Id));
                 return await selectedRecipes.ToListAsync();

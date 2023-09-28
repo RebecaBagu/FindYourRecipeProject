@@ -1,5 +1,5 @@
 ﻿using System;
-using FindYourRecipe.Application.Models;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.DataAccess;
 
 namespace FindYourRecipe.Application.Interfaces

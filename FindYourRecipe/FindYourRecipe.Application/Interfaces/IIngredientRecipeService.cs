@@ -1,6 +1,6 @@
 ﻿using System;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Models.Response;
+using FindYourRecipe.Contracts.Models;
+
 
 namespace FindYourRecipe.Application.Interfaces
 {

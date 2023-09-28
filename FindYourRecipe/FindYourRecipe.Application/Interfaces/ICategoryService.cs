@@ -7,6 +7,8 @@ namespace FindYourRecipe.Application.Interfaces
 {
 	public interface ICategoryService
 	{
+        Task<List<CategoryResponseModel>> GetAsync();
+
 		Task<CategoryResponseModel> GetByIdAsync(int id);
 
         Task<CategoryResponseModel> CreateAsync(CreateOrUpdateCategoryRequestModel request);

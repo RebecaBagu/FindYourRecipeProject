@@ -20,9 +20,15 @@
 
   <ItemGroup>
     <None Remove="Services\" />
+    <None Remove="Pages\Ingredients\" />
+    <None Remove="Pages\Recipes\" />
+    <None Remove="Pages\Category\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
+    <Folder Include="Pages\Ingredients\" />
+    <Folder Include="Pages\Recipes\" />
+    <Folder Include="Pages\Category\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FindYourRecipe.Contracts\FindYourRecipe.Contracts.csproj">

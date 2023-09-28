@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject IJSRuntime JS
+@inject IIngredientService IngredientService
+@inject IRecipeService RecipeService
 
 <PageTitle>Home</PageTitle>
 
@@ -23,46 +25,92 @@
         }
     </style>
 </div>
-<div class="container" style="margin-top: 120px;">
+<div class="container" style="margin-top: 150px;">
     <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             <h1 style="font-size: 20px;margin-bottom: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;Choose the ingredients you want to use in the recipe: </h1>
-            <select id="SearchBar" name="states[]" class="form-control" multiple="multiple">
-                <option value="1">Apple</option>
-                <option value="2">Pasta</option>
+            <select id="SearchBar" class="form-control" multiple="multiple" @bind="SelectedIngredients">
+                @foreach (var ingredient in ingredientsList)
+                {
+                    <option value="@ingredient.Id">@ingredient.Name</option>
+                }
             </select>
         </div>
         <div class="col-sm-2"></div>
     </div>
 </div>
 
-<div class="container" style="margin-top: 30px;">
+<div class="container p-2" style="margin-top: 25px; margin-bottom:25px">
     <div class="row">
         <div class="col-sm-5"></div>
         <div class="col-sm-2  d-grid">
-            <button type="button" class="btn btn-outline-dark" @onclick="SearchClick">Search</button>
+            <button type="button" class="btn btn-outline-dark" @onclick="SearchClicked">Search</button>
         </div>
         <div class="col-sm-5"></div>
     </div>
 </div>
-@code{ protected override async Task OnAfterRenderAsync(bool firstRender)
+
+<div class="container" style="background-color: rgb(225, 215, 198); margin-top: 200px; margin-bottom:25px">
+    <h2 class="text=md-left"> &nbsp;&nbsp;&nbsp;Our recipes </h2>
+</div>
+
+<div class="container">
+    <div class="row">
+        @foreach (var recipe in recipesByIds)
+        {<div class="col-md-4 mb-4">
+                <div class="card">
+                    @foreach (var photo in recipe.Photos)
+                    {
+                        <img src="@photo.Link" />
+                    }
+                <h5 class="card-titile" style="background-color: rgb(225, 215, 198)">&nbsp;@recipe.Title</h5>
+                    <p class="card-text" style="margin-left: 10px">Cuisine: @recipe.Cuisine</p>
+                    <p class="card-text" style="margin-left: 10px"> @recipe.Description</p>
+                    <p class="card-text" style="margin-bottom:10px; margin-left:10px">Dificulty: @recipe.Dificulty</p>
+                    <div class=" btn-group">
+                        <a href="@recipe.RecipeLink" class="btn" style="background-color: rgb(225, 215, 198)" role="button">
+                            Go to recipe link
+                        </a>
+                    </div>
+
+                </div>
+            </div>}
+    </div>
+</div>
+
+@code{
+    string[] SelectedIngredients { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        await JS.InvokeVoidAsync("InitializeSearchBar");
+        //await JS.InvokeVoidAsync("InitializeSearchBar");
     }
 
-    public async Task<List<int>> GetIds()
+
+
+    protected async override Task OnInitializedAsync()
     {
-        return await JS.InvokeAsync<List<int>>("GetSearchBarValues");
+        SelectedIngredients = new string[0];
+        await LoadRecipes();
 
     }
-    public async Task SearchClick()
+
+    async Task SearchClicked()
     {
-        var ids= await GetIds();
-        foreach(var id in ids)
-        {
-            Console.WriteLine(id);
-        }
+        await LoadRecipes();
+        this.StateHasChanged();
     }
+
+    async Task LoadRecipes()
+    {
+        ingredientsList = await IngredientService.GetAsync();
+        List<int> SelectedIngredientsList = SelectedIngredients.Select(x => Int32.Parse(x)).ToList();
+        recipesByIds = await RecipeService.GetByIngredientsAsync(SelectedIngredientsList);
+    }
+
+    List<IngredientResponseModel> ingredientsList = new List<IngredientResponseModel>();
+    List<RecipeResponseModel> recipesByIds = new List<RecipeResponseModel>();
+
 }

@@ -46,7 +46,7 @@ namespace FindYourRecipe.Api.Controllers
 
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CreateOrUpdateIngredientRequestModel request)
+		public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateIngredientRequestModel request)
 		{
 			try
 			{

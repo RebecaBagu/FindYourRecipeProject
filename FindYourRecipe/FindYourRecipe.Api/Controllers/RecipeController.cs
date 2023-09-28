@@ -37,7 +37,7 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpGet("by-ingredients")]
-		public async Task<IActionResult> GetRecipeByIngredientsAsync([FromQuery] List<int>list)
+		public async Task<IActionResult> GetRecipeByIngredientsAsync( [FromQuery]List<int>list)
 		{
 			try
 			{
@@ -50,13 +50,13 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateAsync([FromQuery] CreateOrUpdateRecipeRequestModel request)
+		public async Task<IActionResult> CreateAsync( CreateOrUpdateRecipeRequestModel request)
 		{
 			return Ok(await RecipeService.CreateAsync(request));
         }
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CreateOrUpdateRecipeRequestModel request)
+		public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateRecipeRequestModel request)
 		{
 			try
 			{
@@ -68,13 +68,20 @@ namespace FindYourRecipe.Api.Controllers
 			}
 		}
 
-		[HttpDelete]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAsync(int id)
 		{
-			await RecipeService.DeleteAsync(id);
+			try
+			{
+				await RecipeService.DeleteAsync(id);
 
-            return Ok();
-		}
+				return Ok();
+			}
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
 	}
 }
 

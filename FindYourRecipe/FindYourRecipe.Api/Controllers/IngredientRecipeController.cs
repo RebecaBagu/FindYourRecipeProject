@@ -15,11 +15,17 @@ namespace FindYourRecipe.Api.Controllers
 			IngredientRecipeService = ingredientRecipeService;
 		}
 
-		[HttpPut]
+		[HttpPost]
 		public async Task<IActionResult> CreateAsync( CreateIngredientRecipeRequestModel request)
 		{
 			return Ok(await IngredientRecipeService.CreateAsync(request));
 			
+		}
+
+		[HttpPut]
+		public async Task<IActionResult> UpdateAsync(int id, CreateIngredientRecipeRequestModel request)
+		{
+			return Ok(await IngredientRecipeService.UpdateAsync(id, request));
 		}
 
 		[HttpDelete("{id}")]

@@ -16,6 +16,12 @@ namespace FindYourRecipe.Api.Controllers
 			CategoryService = categoryService;
         }
 
+		[HttpGet]
+		public async Task<IActionResult> GetAsync()
+		{
+			return Ok(await CategoryService.GetAsync());
+		}
+
 		[HttpGet("{id}")]
 		public async Task< IActionResult> GetByIdAsync(int id)
 		{

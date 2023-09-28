@@ -1,0 +1,96 @@
+﻿@page "/recipes/{recipeId}"
+@inject IRecipeService RecipeService
+
+<PageTitle>UpdateRecipe</PageTitle>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <EditForm Model="@recipeToUpdate" OnValidSubmit="HandleValidSubmitAsync">
+            <DataAnnotationsValidator />
+            <div class="container" style="margin-top: 100px">
+                <div class="row">
+                    <h2 style="text-align:center">Create Ingredient</h2>
+                </div>
+                <div class="row">
+                    <label for="title">Title: </label>
+                    <InputText id="title" @bind-Value="@recipeToUpdate.Title"></InputText>
+                    <ValidationMessage For="@(()=> recipeToUpdate.Title)"></ValidationMessage>
+
+                </div>
+                <div class="row">
+                    <label for="recipeLink">RecipeLink: </label>
+                    <InputText id="recipeLink" @bind-Value="@recipeToUpdate.RecipeLink"></InputText>
+                    <ValidationMessage For="@(()=> recipeToUpdate.RecipeLink)"></ValidationMessage>
+                </div>
+                <div class="row">
+                    <label for="description">Description: </label>
+                    <InputText id="description" @bind-Value="@recipeToUpdate.Description"></InputText>
+                    <ValidationMessage For="@(()=> recipeToUpdate.Description)"></ValidationMessage>
+                </div>
+                <div class="row">
+                    <label for="cuisine">Cuisine: </label>
+                    <InputText id="cuisine" @bind-Value="@recipeToUpdate.Cuisine"></InputText>
+                    <ValidationMessage For="@(()=> recipeToUpdate.Cuisine)"></ValidationMessage>
+                </div>
+                <div class="row">
+                    <label for="dificulty">Dificulty: </label>
+                    <InputText id="dificulty" @bind-Value="@recipeToUpdate.Dificulty"></InputText>
+                    <ValidationMessage For="@(()=> recipeToUpdate.Dificulty)"></ValidationMessage>
+                </div>
+
+                <div class="row" style="margin-top:20px">
+                    <button type="submit" class="btn btn-primary">Create Recipe</button>
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+@if (displayMessage)
+{
+    <div style="text-align:center; margin-top:20px">
+        <p style="font-size:25px">The ingredient was created</p>
+        <p>Recipe id: @newRecipe.Id</p>
+        <p>Recipe title: @newRecipe.Title</p>
+        <p>Recipe link: @newRecipe.RecipeLink</p>
+        <p>Recipe description:@newRecipe.Description</p>
+        <p>Recipe cuisine: @newRecipe.Cuisine</p>
+        <p>Recipe dificulty: @newRecipe.Dificulty</p>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public string recipeId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var recipe = await RecipeService.GetByIdAsync(int.Parse(recipeId));
+        recipeToUpdate.Title = recipe.Title;
+        recipeToUpdate.RecipeLink = recipe.RecipeLink;
+        recipeToUpdate.Description = recipe.Description;
+        recipeToUpdate.Cuisine = recipe.Cuisine;
+        recipeToUpdate.Dificulty = recipe.Dificulty;
+
+    }
+
+    private CreateOrUpdateRecipeRequestModel recipeToUpdate = new();
+
+    private RecipeResponseModel newRecipe = new();
+
+    private bool displayMessage = false;
+
+    public async Task HandleValidSubmitAsync()
+    {
+        newRecipe = await RecipeService.CreateAsync(recipeToUpdate);
+        displayMessage = true;
+        recipeToUpdate = new();
+
+    }
+}
+

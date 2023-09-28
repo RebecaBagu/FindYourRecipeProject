@@ -12,6 +12,11 @@ namespace FindYourRecipe.DataAccess.Repositories
 			Database = database;
 		}
 
+        public Task<List<Category>> GetAsync()
+        {
+            return Database.Category.OrderBy(x => x.Id).ToListAsync();
+        }
+
         public Task<Category> GetByIdAsync(int id)
         {
             return Database.Category.FirstAsync(x => x.Id == id);

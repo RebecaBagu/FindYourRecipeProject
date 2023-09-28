@@ -30,6 +30,7 @@ builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<ICategoryRecipeService, CategoryRecipeService>();
 builder.Services.AddScoped<IIngredientRecipeService, IngredientRecipeService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 var app = builder.Build();

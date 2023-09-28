@@ -5,7 +5,9 @@ namespace FindYourRecipe.Contracts
 {
 	public interface ICategoryService
 	{
-		Task<CategoryResponseModel> GetByIdAsync(int id);
+        Task<List<CategoryResponseModel>> GetAsync();
+
+        Task<CategoryResponseModel> GetByIdAsync(int id);
 
         Task<CategoryResponseModel> CreateAsync(CreateOrUpdateCategoryRequestModel request);
 

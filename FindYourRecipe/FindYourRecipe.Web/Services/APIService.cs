@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace FindYourRecipe.Web.Services
 {
-	public class APiService
+	public abstract class APiService
 	{
 		HttpClient _client;
 		public APiService(HttpClient client)
@@ -12,13 +12,13 @@ namespace FindYourRecipe.Web.Services
 			_client = client;
 		}
 
-		public async Task DeleteAsync(string route)
+		protected async Task DeleteAsync(string route)
 		{
 			var result = await _client.DeleteAsync(route);
 			result.EnsureSuccessStatusCode();
 		}
 
-		public async Task<T> GetAsync<T>(string route)
+        protected async Task<T> GetAsync<T>(string route)
 		{
 			var result = await _client.GetAsync(route);
 			result.EnsureSuccessStatusCode();
@@ -26,7 +26,7 @@ namespace FindYourRecipe.Web.Services
 			return JsonConvert.DeserializeObject<T>(json);
         }
 
-		public async Task<T> PostAsync<T>(string route, object request)
+        protected async Task<T> PostAsync<T>(string route, object request)
 		{
 			var json = JsonConvert.SerializeObject(request);
 			var data = new StringContent(json, Encoding.UTF8, "application/json");
@@ -36,7 +36,7 @@ namespace FindYourRecipe.Web.Services
             return JsonConvert.DeserializeObject<T>(jsonResult);
         }
 
-        public async Task<T> PutAsync<T>(string route, object request)
+        protected async Task<T> PutAsync<T>(string route, object request)
         {
             var json = JsonConvert.SerializeObject(request);
             var data = new StringContent(json, Encoding.UTF8, "application/json");

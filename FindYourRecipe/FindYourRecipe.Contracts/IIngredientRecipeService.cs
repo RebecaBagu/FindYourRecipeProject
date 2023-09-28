@@ -7,6 +7,7 @@ namespace FindYourRecipe.Contracts
 	{
 		Task DeleteAsync(int id);
 		Task<IngredientRecipeResponseModel> CreateAsync(CreateIngredientRecipeRequestModel request);
+		Task<IngredientRecipeResponseModel> UpdateAsync(int id,CreateIngredientRecipeRequestModel request);
 	}
 }
 

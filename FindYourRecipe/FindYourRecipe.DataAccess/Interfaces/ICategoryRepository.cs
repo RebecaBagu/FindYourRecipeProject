@@ -4,6 +4,7 @@ namespace FindYourRecipe.DataAccess.Interfaces
 	public interface ICategoryRepository
 	{
 		Task<Category> GetByIdAsync(int id);
+        Task<List<Category>> GetAsync();
 
 		Task<Category> CreateAsync(string name);
 

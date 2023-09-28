@@ -18,6 +18,12 @@ namespace FindYourRecipe.Application.Services
             Mapper = mapper;
 		}
 
+        public async Task<List<CategoryResponseModel>> GetAsync()
+        {
+            var categories = await Repository.GetAsync();
+            return Mapper.Map<List<Category>, List<CategoryResponseModel>>(categories);
+        }
+
         public async Task<CategoryResponseModel> CreateAsync(CreateOrUpdateCategoryRequestModel request)
         {
             var category = await Repository.CreateAsync(request.Name);

@@ -30,6 +30,14 @@ namespace FindYourRecipe.Application.Services
             else
                 throw new NotFoundException(id);
         }
+
+        public async Task<IngredientRecipeResponseModel> UpdateAsync(int id,CreateIngredientRecipeRequestModel request)
+        {
+            var ingredientRecipe = await Repository.UpdateAsync(id,request.IngredientId, request.RecipeId, request.Quantity);
+            return Mapper.Map<IngredientRecipe, IngredientRecipeResponseModel>(ingredientRecipe);
+        }
+
+        
     }
 }
 

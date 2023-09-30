@@ -54,6 +54,11 @@ namespace FindYourRecipe.DataAccess.Repositories
             else
                 return false;
         }
+
+        public Task<List<CategoryRecipe>> GetAsync()
+        {
+            return Database.CategoryRecipes.OrderBy(x => x.Id).ToListAsync();
+        }
     }
 }
 

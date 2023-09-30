@@ -6,6 +6,8 @@ namespace FindYourRecipe.Contracts
 	{
 		Task<CategoryRecipeResponseModel> CreateAsync(CreateCategoryRecipeRequestModel request);
 		Task DeleteAsync(int id);
+		Task<List<CategoryRecipeResponseModel>> GetAsync();
+		Task<CategoryRecipeResponseModel> GetByIdAsync(int id);
 	}
 }
 

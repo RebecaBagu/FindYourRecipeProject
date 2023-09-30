@@ -17,10 +17,29 @@ namespace FindYourRecipe.Api.Controllers
 
         }
 
-		[HttpPost]
-		public async Task<CategoryRecipeResponseModel> CreateAsync(CreateCategoryRecipeRequestModel request)
+		[HttpGet]
+		public async Task<IActionResult> GetAsync()
 		{
-			return await CategoryRecipeService.CreateAsync(request);
+			return Ok(await CategoryRecipeService.GetAsync());
+		}
+
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetByIdAsync(int id)
+		{
+            try
+            {
+                return Ok(await CategoryRecipeService.GetByIdAsync(id));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> CreateAsync(CreateCategoryRecipeRequestModel request)
+		{
+			return Ok(await CategoryRecipeService.CreateAsync(request));
 		}
 
 		[HttpDelete("{id}")]

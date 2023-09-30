@@ -32,12 +32,16 @@ namespace FindYourRecipe.DataAccess.Repositories
 
         public Task<List<Ingredient>> GetAsync()
         {
-            return Database.Ingredients.OrderBy(x => x.Id).ToListAsync();
+            return Database.Ingredients
+                .Include(x => x.IngredientRecipes)
+                .OrderBy(x => x.Id).ToListAsync();
         }
 
         public Task<Ingredient> GetByIdAsync(int id)
         {
-            return Database.Ingredients.FirstAsync(x => x.Id == id);
+            return Database.Ingredients
+                .Include(x=>x.IngredientRecipes)
+                .FirstAsync(x => x.Id == id);
         }
 
         public async Task<Ingredient> UpdateAsync(int id, string name, string category)

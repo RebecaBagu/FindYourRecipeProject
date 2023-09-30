@@ -12,6 +12,7 @@ namespace FindYourRecipe.Contracts.Models
 
         public ICollection<PhotoResponseModel> Photos { get; set; }
         public ICollection<CategoryRecipeResponseModel> CategoryRecipe { get; set; }
+        public ICollection<IngredientRecipeResponseModel> IngredientRecipe { get; set; }
         
 
     }

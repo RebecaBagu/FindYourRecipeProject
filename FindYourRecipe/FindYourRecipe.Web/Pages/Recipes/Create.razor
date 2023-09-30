@@ -1,5 +1,12 @@
 ﻿@page "/recipes/create"
+
+@inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
+@inject IIngredientRecipeService IngredientRecipeService
+@inject ICategoryRecipeService CategoryRecipeService
+@inject ICategoryService CategoryService
+@inject IPhotoService PhotoService
 
 <PageTitle>Create Recipe</PageTitle>
 
@@ -7,11 +14,11 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <EditForm Model="@recipe" OnValidSubmit="HandleValidSubmitAsync">
+        <EditForm Model="@recipe" OnValidSubmit="SaveAll">
             <DataAnnotationsValidator />
             <div class="container" style="margin-top: 100px">
                 <div class="row">
-                    <h2 style="text-align:center">Create Ingredient</h2>
+                    <h2 style="text-align:center">Create Recipe</h2>
                 </div>
                 <div class="row">
                     <label for="title">Title: </label>
@@ -39,10 +46,6 @@
                     <InputText id="dificulty" @bind-Value="@recipe.Dificulty"></InputText>
                     <ValidationMessage For="@(()=> recipe.Dificulty)"></ValidationMessage>
                 </div>
-
-                <div class="row" style="margin-top:20px">
-                    <button type="submit" class="btn btn-primary">Create Recipe</button>
-                </div>
             </div>
 
         </EditForm>
@@ -50,32 +53,299 @@
     <div class="col-md-2"></div>
 </div>
 
-@if (displayMessage)
+
+<div class="container mt-3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ingredient</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ingredientRecipe in temporaryIngredientRecipesList)
+            {
+                <tr>
+                    <td>
+                        <select id="SelectedIngredient" class="form-select" @bind="ingredientRecipe.IngredientId">
+                            <option value="" selected disabled>Select ingredient</option>
+                            @foreach (var ingredient in ingredientsList)
+                            {
+                                <option value="@ingredient.Id">@ingredient.Name</option>
+                            }
+                        </select>
+                    </td>
+
+                    <td>
+                        <InputText class="form-control" id="quantity" @bind-Value="@ingredientRecipe.Quantity"></InputText>
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="async () => { temporaryIngredientRecipesList.Remove(ingredientRecipe); }">Delete</button>
+                    </td>
+                    <td>
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<span class="btn btn-primary w-100 text-center" @onclick="AddIngredientRow">Add Ingredient</span>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @foreach (var categoryRecipe in temporaryCategoryRecipeList)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select class="form-select" @bind="categoryRecipe.CategoryId">
+                                    <option value="" selected disabled>Select category</option>
+                                    @foreach (var category in categoryList)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" @onclick="async () => { temporaryCategoryRecipeList.Remove(categoryRecipe); }">Delete</button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                }
+            </table>
+            <span class="btn btn-primary w-100 text-center" @onclick="AddCategoryRecipeRow">Add Recipe Category </span>
+
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                @foreach (var photo in photoList)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                <InputText class="form-control" id="link" @bind-Value="@photo.Link"></InputText>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" @onclick="async () => { photoList.Remove(photo); }">Delete</button>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                }
+            </table>
+            <span class="btn btn-primary w-100 text-center" @onclick="AddPhotoRow">Add Recipe Photo </span>
+        </div>
+    </div>
+
+    <button class="btn btn-primary w-100" style="margin-top:60px" data-bs-toggle="modal" data-bs-target="#myModal" @onclick="SaveAll">Save All</button>
+
+</div>
+
+
+@if (displayMessageAllCreated)
 {
-    <div style="text-align:center; margin-top:20px">
-        <p style="font-size:25px">The ingredient was created</p>
-        <p>Recipe id: @newRecipe.Id</p>
-        <p>Recipe title: @newRecipe.Title</p>
-        <p>Recipe link: @newRecipe.RecipeLink</p>
-        <p>Recipe description:@newRecipe.Description</p>
-        <p>Recipe cuisine: @newRecipe.Cuisine</p>
-        <p>Recipe dificulty: @newRecipe.Dificulty</p>
+    <div class="modal show" style="display: block; backdrop-filter: blur(4px) " id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">The recipe was created</h4>
+                </div>
+                <div class="modal=body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Recipe id: @newRecipe.Id</p>
+                                <p>Recipe title: @newRecipe.Title</p>
+                                <p>Recipe link: @newRecipe.RecipeLink</p>
+                                <p>Recipe description:@newRecipe.Description</p>
+                                <p>Recipe cuisine: @newRecipe.Cuisine</p>
+                                <p>Recipe dificulty: @newRecipe.Dificulty</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p style="margin-top:5px">Ingredients:</p>
+                                @foreach (var item in temporaryIngredientRecipesList)
+                                {
+                                    var ingredientId = int.Parse(item.IngredientId);
+                                    var ingredientName = ingredientsList.First(x => x.Id == ingredientId).Name;
+                                    <span>
+                                        <span class="badge bg-secondary">  @ingredientName </span>
+                                        @item.Quantity
+                                    </span>
+                                }
+                                <p style="margin-top:5px">Categories:</p>
+                                @foreach (var category in temporaryCategoryRecipeList)
+                                {
+                                    var categoryId = int.Parse(category.CategoryId);
+                                    var categoryName = categoryList.First(x => x.Id == categoryId);
+                                    <span>
+                                        <span class="badge bg-secondary">  @categoryName.Name </span>
+                                    </span>
+                                }
+                                <p style="margin-top:5px">Photos:</p>
+                                @foreach (var photo in photoList)
+                                { <span >
+                                    <img style=" width:50px; height:50px" src="@photo.Link"  />
+                                  </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="RefreshPage">Close</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 }
 
 
-@code {
-    private CreateOrUpdateRecipeRequestModel recipe = new();
 
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        ingredientsList = await IngredientService.GetAsync();
+        categoryList = await CategoryService.GetAsync();
+
+    }
+
+    private List<IngredientResponseModel> ingredientsList = new();
+    private List<TemporaryIngredientRecipe> temporaryIngredientRecipesList = new();
+
+    private CreateOrUpdateRecipeRequestModel recipe = new();
     private RecipeResponseModel newRecipe = new();
 
-    private bool displayMessage = false;
+    private List<CategoryResponseModel> categoryList = new();
+    private List<TemporaryCategoryRecipe> temporaryCategoryRecipeList = new();
 
-    public async Task HandleValidSubmitAsync()
+    
+    private List<PhotoResponseModel> photoList = new();
+
+    private bool displayMessageAllCreated = false;
+
+    public async Task AddIngredientRow()
+    {
+        var temporaryIngredientRecipe = new TemporaryIngredientRecipe();
+        temporaryIngredientRecipesList.Add(temporaryIngredientRecipe);
+        StateHasChanged();
+    }
+
+    public async Task AddCategoryRecipeRow()
+    {
+        var temporaryCategoryRecipe = new TemporaryCategoryRecipe();
+        temporaryCategoryRecipeList.Add(temporaryCategoryRecipe);
+        StateHasChanged();
+    }
+
+    public async Task AddPhotoRow()
+    {
+        PhotoResponseModel photo = new();
+        photoList.Add(photo);
+        StateHasChanged();
+    }
+
+
+
+    public async Task CreateRecipe()
     {
         newRecipe = await RecipeService.CreateAsync(recipe);
-        displayMessage = true;
         recipe = new();
 
+    }
+
+    public async Task CreateIngredientRecipe()
+    {
+        foreach (var ingredientRecipe in temporaryIngredientRecipesList)
+        {
+            CreateIngredientRecipeRequestModel createIngredientRecipe = new()
+            {
+                IngredientId = int.Parse(ingredientRecipe.IngredientId),
+                RecipeId = newRecipe.Id,
+                Quantity = ingredientRecipe.Quantity,
+            };
+            await IngredientRecipeService.CreateAsync(createIngredientRecipe);
+
+        }
+    }
+
+    public async Task CreateCategoryRecipe()
+    {
+        foreach (var categoryRecipe in temporaryCategoryRecipeList)
+        {
+            CreateCategoryRecipeRequestModel createCategoryRecipe = new()
+            {
+                CategoryId = int.Parse(categoryRecipe.CategoryId),
+                RecipeId = newRecipe.Id,
+            };
+            await CategoryRecipeService.CreateAsync(createCategoryRecipe);
+        }
+    }
+
+    public async Task CreatePhoto()
+    {
+        foreach (var photo in photoList)
+        {
+            CreatePhotoRequestModel createPhoto = new()
+            {
+                Link = photo.Link,
+                RecipeId = newRecipe.Id,
+            };
+        }
+    }
+
+
+
+    public async Task SaveAll()
+    {
+        await CreateRecipe();
+        await CreateIngredientRecipe();
+        await CreateCategoryRecipe();
+        await CreatePhoto();
+        displayMessageAllCreated = true;
+    }
+
+    private void RefreshPage()
+    {
+        NavigationManager.NavigateTo("/recipes/create", true);
+    }
+
+    public class TemporaryIngredientRecipe
+    {
+        public int Id { get; set; }
+        public string IngredientId { get; set; }
+        public int RecipeId { get; set; }
+        public string Quantity { get; set; }
+    }
+
+    public class TemporaryCategoryRecipe
+    {
+        public int Id { get; set; }
+        public string CategoryId { get; set; }
+        public int RecipeId { get; set; }
     }
 }

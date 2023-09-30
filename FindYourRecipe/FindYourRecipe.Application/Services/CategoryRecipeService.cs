@@ -30,6 +30,23 @@ namespace FindYourRecipe.Application.Services
             else
                 throw new NotFoundException(id);
         }
+
+        public async Task<CategoryRecipeResponseModel> GetByIdAsync(int id)
+        {
+            if (await Repository.ExistsAsync(id))
+            {
+                var categoryRecipe= await Repository.GetByIdAsync(id);
+                return Mapper.Map<CategoryRecipe,CategoryRecipeResponseModel>(categoryRecipe);
+            }
+            else
+                throw new NotFoundException(id);
+        }
+
+        public async Task<List<CategoryRecipeResponseModel>> GetAsync()
+        {
+            var categoryRecipes=await Repository.GetAsync();
+            return Mapper.Map<List<CategoryRecipe>, List<CategoryRecipeResponseModel>>(categoryRecipes);
+        }
     }
 }
 

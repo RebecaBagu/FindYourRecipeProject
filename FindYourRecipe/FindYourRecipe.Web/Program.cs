@@ -12,6 +12,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddTransient<IIngredientService, IngredientService>();
 builder.Services.AddTransient<IRecipeService, RecipeService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IIngredientRecipeService, IngredientRecipeService>();
+builder.Services.AddTransient<ICategoryRecipeService, CategoryRecipeService>();
+builder.Services.AddTransient<IPhotoService, PhotoService>();
 
 
 await builder.Build().RunAsync();

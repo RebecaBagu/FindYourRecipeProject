@@ -16,11 +16,11 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             IngredientRecipe ingredientRecipe = new IngredientRecipe()
             {
-                IngredientId = ingredientId,
-                RecipeId = recipeId,
+                IngredientId=ingredientId,
+                RecipeId=recipeId,
                 Quantity = quantity,
             };
-            Database.Add(ingredientRecipe);
+            Database.IngredientsRecipes.Add(ingredientRecipe);
             await Database.SaveChangesAsync();
             return ingredientRecipe;
         }

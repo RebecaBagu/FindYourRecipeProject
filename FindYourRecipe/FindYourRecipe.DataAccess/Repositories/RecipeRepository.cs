@@ -38,7 +38,8 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             return Database.Recipes
                 .Include(p => p.Photos)
-                .Include(p => p.CategoryRecipe).ThenInclude(p=>p.Category)  
+                .Include(p => p.CategoryRecipe).ThenInclude(p=>p.Category)
+                .Include(p=>p.IngredientRecipes).ThenInclude(p=>p.Ingredient)
                 .OrderBy(p => p.Id).ToListAsync();
         }
 

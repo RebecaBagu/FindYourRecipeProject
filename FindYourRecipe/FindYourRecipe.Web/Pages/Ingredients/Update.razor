@@ -1,5 +1,6 @@
 ﻿@page "/ingredients/{IngredientId}"
 @inject IIngredientService IngredientService
+@inject NavigationManager NavigationManager
 
 
 <PageTitle>Update Ingredient</PageTitle>
@@ -35,15 +36,38 @@
     <div class="col-md-2"></div>
 </div>
 
+
+
 @if (displayMessage)
 {
-    <div style="text-align:center; margin-top:20px">
-        <p style="font-size:25px">The ingredient was created</p>
-        <p>Ingredient id: @newIngredient.Id</p>
-        <p>Ingredient name: @newIngredient.Name</p>
-        <p>Ingredient category: @newIngredient.Category</p>
+
+    <div class="modal show" style="display: block; backdrop-filter: blur(4px) " id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">The ingredient was Updated</h4>
+                </div>
+                <div class="modal=body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Ingredient id: @newIngredient.Id</p>
+                                <p>Ingredient name: @newIngredient.Name</p>
+                                <p>Ingredient category: @newIngredient.Category</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="RefreshPage">Close</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 }
+
 
 
 @code { protected async override Task OnInitializedAsync()
@@ -65,10 +89,14 @@
 
     public async Task HandleValidSubmitAsync()
     {
-        newIngredient = await IngredientService.UpdateAsync(int.Parse(IngredientId),ingredientToUpdate);
+        newIngredient = await IngredientService.UpdateAsync(int.Parse(IngredientId), ingredientToUpdate);
         displayMessage = true;
-        
 
+
+    }
+    private void RefreshPage()
+    {
+        NavigationManager.NavigateTo("/ingredients", true);
     }
 }
 

@@ -25,6 +25,11 @@ namespace FindYourRecipe.Application.Services
             return Mapper.Map<Photo, PhotoResponseModel>(photo);
         }
 
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            await Repository.DeleteByRecipeIdAsync(recipeId);
+        }
+
         public async Task DeteleAsync(int id)
         {
             if (await Repository.ExistsAsync(id))

@@ -49,6 +49,15 @@ namespace FindYourRecipe.DataAccess.Repositories
             else
                 return false;
         }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            var photos = await (from photo in Database.Photos
+                         where (photo.RecipeId == recipeId)
+                         select photo).ToListAsync();
+            Database.RemoveRange(photos);
+            await Database.SaveChangesAsync();
+        }
     }
 }
 

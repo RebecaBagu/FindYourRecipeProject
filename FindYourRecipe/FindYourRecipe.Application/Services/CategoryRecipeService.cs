@@ -47,6 +47,11 @@ namespace FindYourRecipe.Application.Services
             var categoryRecipes=await Repository.GetAsync();
             return Mapper.Map<List<CategoryRecipe>, List<CategoryRecipeResponseModel>>(categoryRecipes);
         }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            await Repository.DeleteByRecipeIdAsync(recipeId);
+        }
     }
 }
 

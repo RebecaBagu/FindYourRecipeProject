@@ -13,6 +13,8 @@ namespace FindYourRecipe.Contracts
 
         Task DeleteAsync(int id);
 
+        
+
         Task<CategoryResponseModel> UpdateAsync(int id, CreateOrUpdateCategoryRequestModel request);
     }
 }

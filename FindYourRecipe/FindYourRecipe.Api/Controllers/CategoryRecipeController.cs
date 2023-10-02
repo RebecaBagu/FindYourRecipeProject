@@ -55,6 +55,14 @@ namespace FindYourRecipe.Api.Controllers
 				return NotFound();
 			}
 		}
-	}
+
+        [HttpDelete("by-recipeId/{recipeId}")]
+        public async Task<IActionResult> DeleteByRecipeIdAsync(int recipeId)
+        {
+            await CategoryRecipeService.DeleteByRecipeIdAsync(recipeId);
+            return Ok();
+
+        }
+    }
 }
 

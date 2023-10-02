@@ -68,7 +68,7 @@
                     <p class="card-text" style="margin-left: 10px">Cuisine: @recipe.Cuisine</p>
                     <p class="card-text" style="margin-left: 10px"> @recipe.Description</p>
                     <span class="card-text" style="margin-left:10px">
-                        @foreach (var categoryRecipe in recipe.CategoryRecipe)
+                        @foreach (var categoryRecipe in recipe.CategoryRecipes)
                         {
                             var x = categoryRecipe.Category;
                             <span class="badge bg-secondary m-1" >@x.Name</span>

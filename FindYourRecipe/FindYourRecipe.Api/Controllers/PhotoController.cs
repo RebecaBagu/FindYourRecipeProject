@@ -63,6 +63,14 @@ namespace FindYourRecipe.Api.Controllers
 				return NotFound();
 			}
 		}
-	}
+
+        [HttpDelete("by-recipeId/{recipeId}")]
+        public async Task<IActionResult> DeleteByRecipeIdAsync(int recipeId)
+        {
+			await PhotoService.DeleteByRecipeIdAsync(recipeId);
+            return Ok();
+
+        }
+    }
 }
 

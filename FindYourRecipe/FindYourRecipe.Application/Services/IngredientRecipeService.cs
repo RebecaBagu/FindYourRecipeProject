@@ -37,7 +37,12 @@ namespace FindYourRecipe.Application.Services
             return Mapper.Map<IngredientRecipe, IngredientRecipeResponseModel>(ingredientRecipe);
         }
 
-        
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            await Repository.DeleteByRecipeIdAsync(recipeId);
+        }
+
+
     }
 }
 

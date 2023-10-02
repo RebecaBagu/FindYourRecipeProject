@@ -10,9 +10,9 @@ namespace FindYourRecipe.Contracts.Models
         public string Dificulty { get; set; }
         public string RecipeLink { get; set; }
 
-        public ICollection<PhotoResponseModel> Photos { get; set; }
-        public ICollection<CategoryRecipeResponseModel> CategoryRecipe { get; set; }
-        public ICollection<IngredientRecipeResponseModel> IngredientRecipe { get; set; }
+        public List<PhotoResponseModel> Photos { get; set; }
+        public List<CategoryRecipeResponseModel> CategoryRecipes { get; set; }
+        public List<IngredientRecipeResponseModel> IngredientRecipes { get; set; }
         
 
     }

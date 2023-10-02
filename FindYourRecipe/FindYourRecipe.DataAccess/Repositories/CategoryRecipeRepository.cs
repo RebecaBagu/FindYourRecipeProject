@@ -59,6 +59,15 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             return Database.CategoryRecipes.OrderBy(x => x.Id).ToListAsync();
         }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            var categories = await (from category in Database.CategoryRecipes
+                                where (category.RecipeId == recipeId)
+                                select category).ToListAsync();
+            Database.RemoveRange(categories);
+            await Database.SaveChangesAsync();
+        }
     }
 }
 

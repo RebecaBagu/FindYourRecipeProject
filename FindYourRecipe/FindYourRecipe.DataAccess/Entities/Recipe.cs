@@ -14,7 +14,7 @@ namespace FindYourRecipe.DataAccess
 
         public IList<IngredientRecipe> IngredientRecipes { get; set; }
 
-		public IList<CategoryRecipe> CategoryRecipe { get; set; }
+		public IList<CategoryRecipe> CategoryRecipes { get; set; }
 
 		
     }

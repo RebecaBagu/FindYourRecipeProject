@@ -42,6 +42,14 @@ namespace FindYourRecipe.Api.Controllers
 			}
 
 		}
-	}
+
+        [HttpDelete("by-recipeId/{recipeId}")]
+        public async Task<IActionResult> DeleteByRecipeIdAsync(int recipeId)
+        {
+            await IngredientRecipeService.DeleteByRecipeIdAsync(recipeId);
+            return Ok();
+
+        }
+    }
 }
 

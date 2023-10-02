@@ -20,6 +20,8 @@ namespace FindYourRecipe.Web.Services
             return DeleteAsync($"/categories/{id}");
         }
 
+       
+
         public Task<List<CategoryResponseModel>> GetAsync()
         {
             return GetAsync<List<CategoryResponseModel>>("/categories");

@@ -32,6 +32,8 @@ namespace FindYourRecipe.Application.Services
                 throw new NotFoundException(id) ;
         }
 
+        
+
         public async Task<List<IngredientResponseModel>> GetAsync()
         {
             var ingredientsList =await  Repository.GetAsync();

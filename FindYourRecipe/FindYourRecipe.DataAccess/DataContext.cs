@@ -29,7 +29,7 @@ namespace FindYourRecipe.DataAccess
                 .HasForeignKey(ir => ir.RecipeId);
 
             modelBuilder.Entity<Recipe>()
-                .HasMany<CategoryRecipe>(cr => cr.CategoryRecipe)
+                .HasMany<CategoryRecipe>(cr => cr.CategoryRecipes)
                 .WithOne(r => r.Recipe)
                 .HasForeignKey(cr => cr.RecipeId);
 

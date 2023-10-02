@@ -14,6 +14,8 @@ namespace FindYourRecipe.DataAccess.Interfaces
         Task<Ingredient> UpdateAsync(int id,string name, string category);
 
         Task<bool> ExistsAsync(int id);
+
+        
     }
 }
 

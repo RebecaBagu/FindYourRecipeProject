@@ -20,6 +20,11 @@ namespace FindYourRecipe.Web.Services
             return DeleteAsync($"/ingredient-recipes/{id}");
         }
 
+        public Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            return DeleteAsync($"/ingredients-recipes/by-recipeId/{recipeId}");
+        }
+
         public Task<IngredientRecipeResponseModel> UpdateAsync(int id, CreateIngredientRecipeRequestModel request)
         {
             return PutAsync<IngredientRecipeResponseModel>($"/ingredient-recipes/{id}", request);

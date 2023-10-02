@@ -1,32 +1,26 @@
-﻿@page "/ingredients/create"
-@inject IIngredientService IngredientService
+﻿@page "/categories/create"
+@inject ICategoryService CategoryService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create Ingredient</PageTitle>
+<PageTitle>Create Category</PageTitle>
 
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <EditForm Model="@ingredient" OnValidSubmit="HandleValidSubmitAsync">
+        <EditForm Model="@category" OnValidSubmit="HandleValidSubmitAsync">
             <DataAnnotationsValidator />
             <div class="container" style="margin-top: 100px">
                 <div class="row">
-                    <h2 style="text-align:center">Create Ingredient</h2>
+                    <h2 style="text-align:center">Create Category</h2>
                 </div>
                 <div class="row">
                     <label for="name">Name: </label>
-                    <InputText id="name" @bind-Value="@ingredient.Name"></InputText>
-                    <ValidationMessage For="@(()=> ingredient.Name)"></ValidationMessage>
+                    <InputText id="name" @bind-Value="@category.Name"></InputText>
+                    <ValidationMessage For="@(()=> category.Name)"></ValidationMessage>
 
                 </div>
-                <div class="row">
-                    <label for="category">Category: </label>
-                    <InputText id="category" @bind-Value="@ingredient.Category"></InputText>
-                    <ValidationMessage For="@(()=> ingredient.Category)"></ValidationMessage>
-                </div>
-
                 <div class="row" style="margin-top:20px">
-                    <button type="submit" class="btn btn-primary">Create ingredient</button>
+                    <button type="submit" class="btn btn-primary">Create Category</button>
                 </div>
             </div>
 
@@ -37,20 +31,18 @@
 
 @if (displayMessage)
 {
-   
     <div class="modal show" style="display: block; backdrop-filter: blur(4px) " id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">The ingredient was created</h4>
+                    <h4 class="modal-title">The category was created</h4>
                 </div>
                 <div class="modal=body">
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-6">
-                                <p>Ingredient id: @newIngredient.Id</p>
-                                <p>Ingredient name: @newIngredient.Name</p>
-                                <p>Ingredient category: @newIngredient.Category</p>
+                                <p>Category id: @newCategory.Id</p>
+                                <p>Category name: @newCategory.Name</p>
                             </div>
                         </div>
                     </div>
@@ -67,23 +59,27 @@
 
 
 @code {
-    private CreateOrUpdateIngredientRequestModel ingredient = new();
+    private CreateOrUpdateCategoryRequestModel category = new();
 
-    private IngredientResponseModel newIngredient = new();
+    private CategoryResponseModel newCategory = new();
 
     private bool displayMessage = false;
 
     public async Task HandleValidSubmitAsync()
     {
-        newIngredient = await IngredientService.CreateAsync(ingredient);
+        newCategory = await CategoryService.CreateAsync(category);
         displayMessage = true;
-        ingredient = new();
+        category = new();
 
     }
 
     private void RefreshPage()
     {
-        NavigationManager.NavigateTo("/ingredients/create", true);
+        NavigationManager.NavigateTo("/categories/create", true);
     }
 }
+
+
+
+
 

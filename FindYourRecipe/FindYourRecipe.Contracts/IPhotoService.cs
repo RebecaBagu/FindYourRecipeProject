@@ -10,6 +10,8 @@ namespace FindYourRecipe.Contracts
 
         Task DeteleAsync(int id);
 
+        Task DeleteByRecipeIdAsync(int recipeId);
+
         Task<PhotoResponseModel> CreateAsync(CreatePhotoRequestModel request);
     }
 }

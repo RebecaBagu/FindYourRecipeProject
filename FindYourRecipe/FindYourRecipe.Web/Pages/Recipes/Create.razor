@@ -315,6 +315,7 @@
                 Link = photo.Link,
                 RecipeId = newRecipe.Id,
             };
+            await PhotoService.CreateAsync(createPhoto);
         }
     }
 

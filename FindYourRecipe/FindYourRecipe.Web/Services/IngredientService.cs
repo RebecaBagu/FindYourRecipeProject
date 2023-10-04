@@ -22,14 +22,19 @@ namespace FindYourRecipe.Web.Services
 
         
 
-        public Task<List<IngredientResponseModel>> GetAsync()
+        public Task<List<IngredientResponseModel>> GetAsync(int skip, int take)
         {
-            return GetAsync < List<IngredientResponseModel>>("/ingredients");
+            return GetAsync < List<IngredientResponseModel>>($"/ingredients?skip={skip}&take={take}");
         }
 
         public Task<IngredientResponseModel> GetByIdAsync(int id)
         {
             return GetAsync<IngredientResponseModel>($"/ingredients/{id}");
+        }
+
+        public Task<int> GetCountAsync()
+        {
+            return GetAsync<int>("/ingredients/count");
         }
 
         public Task<IngredientResponseModel> UpdateAsync(int id, CreateOrUpdateIngredientRequestModel requestModel)

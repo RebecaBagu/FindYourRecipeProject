@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FindYourRecipe.DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FindYourRecipe.DataAccess
 {
@@ -10,6 +11,8 @@ namespace FindYourRecipe.DataAccess
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<IngredientRecipe> IngredientsRecipes { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

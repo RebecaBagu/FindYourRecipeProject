@@ -1,4 +1,6 @@
 ﻿using System;
+using FindYourRecipe.DataAccess.Entities;
+
 namespace FindYourRecipe.DataAccess
 {
 	public class Recipe
@@ -15,6 +17,8 @@ namespace FindYourRecipe.DataAccess
         public IList<IngredientRecipe> IngredientRecipes { get; set; }
 
 		public IList<CategoryRecipe> CategoryRecipes { get; set; }
+
+		public List<Review> Reviews { get; set; }
 
 		
     }

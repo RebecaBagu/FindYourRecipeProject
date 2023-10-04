@@ -303,7 +303,7 @@
         categoryRecipeList = recipeToUpdate.CategoryRecipes;
         photoRecipeList = recipeToUpdate.Photos;
 
-        ingredientsList = await IngredientService.GetAsync();
+        ingredientsList = await IngredientService.GetAsync(0,10000);
         categoryList = await CategoryService.GetAsync();
 
 
@@ -442,7 +442,7 @@
 
     private void RefreshPage()
     {
-        NavigationManager.NavigateTo("/recipes/create", true);
+        NavigationManager.NavigateTo("/", true);
     }
 
     public class TemporaryIngredientRecipe

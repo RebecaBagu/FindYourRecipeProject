@@ -41,19 +41,47 @@
         </thead>
         <tbody>
         </tbody>
+
     </table>
+    <nav>
+        <ul class="pagination">
+            @if (currentPage <= 0)
+            {
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            }
+            else
+            {
+                <li class="page-item" @onclick="PreviousPage"><span class="page-link">Previous</span></li>
+            }
 
+            <li class="page-item active"><span class="page-link"> @(currentPage+1) / @totalPages </span></li>
+            @if (currentPage == (totalPages-1))
+            {
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            }
+            else
+            {
+                <li class="page-item" @onclick="NextPage"><span class="page-link">Next</span></li>
+            }
 
+        </ul>
+    </nav>
 
 </div>
 
 @code {
 
+    int currentPage = 0;
+    int pageSize = 10;
+    int ingredientCount;
+    int totalPages;
     List<IngredientResponseModel> ingredientsList = new List<IngredientResponseModel>();
 
     protected override async Task OnInitializedAsync()
     {
-        ingredientsList = await IngredientService.GetAsync();
+        ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+        ingredientCount = await IngredientService.GetCountAsync();
+        totalPages = ingredientCount / pageSize + 1;
     }
 
     public async Task DeleteIngredientsClick(int id)
@@ -63,7 +91,7 @@
         {
             await IngredientService.DeleteAsync(id);
 
-            ingredientsList = await IngredientService.GetAsync();
+            ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
 
             this.StateHasChanged();
         }
@@ -71,8 +99,19 @@
 
     }
 
+    async void PreviousPage()
+    {
+        currentPage--;
+        ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+        StateHasChanged();
+    }
 
-
+    async void NextPage()
+    {
+        currentPage++;
+        ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+        StateHasChanged();
+    }
 
 
 

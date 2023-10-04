@@ -34,9 +34,9 @@ namespace FindYourRecipe.Application.Services
 
         
 
-        public async Task<List<IngredientResponseModel>> GetAsync()
+        public async Task<List<IngredientResponseModel>> GetAsync(int skip, int take)
         {
-            var ingredientsList =await  Repository.GetAsync();
+            var ingredientsList =await  Repository.GetAsync(skip,take);
             return Mapper.Map<List<Ingredient>, List<IngredientResponseModel>>(ingredientsList);
         }
 
@@ -62,6 +62,10 @@ namespace FindYourRecipe.Application.Services
                 throw new NotFoundException(id);
 
 
+        }
+        public async Task<int> GetCountAsync()
+        {
+            return await Repository.GetCountAsync();
         }
     }
 }

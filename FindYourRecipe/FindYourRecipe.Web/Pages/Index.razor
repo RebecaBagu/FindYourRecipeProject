@@ -56,15 +56,15 @@
 </div>
 
 <div class="container">
-    <div class="row">
+    <div class="row" id="Cards" data-masonry="{'percentPosition': true }">
         @foreach (var recipe in recipesByIds)
         {<div class="col-md-4 mb-4">
                 <div class="card">
                     @foreach (var photo in recipe.Photos)
                     {
-                        <img src="@photo.Link" />
+                        <img style="width:auto; height:450px" src="@photo.Link" />
                     }
-                    <h5 class="card-titile" style="background-color: rgb(225, 215, 198)">&nbsp;@recipe.Title</h5>
+                    <h5 class="card-title" style="background-color: rgb(225, 215, 198)">&nbsp;@recipe.Title</h5>
                     <p class="card-text" style="margin-left: 10px">Cuisine: @recipe.Cuisine</p>
                     <p class="card-text" style="margin-left: 10px"> @recipe.Description</p>
                     <span class="card-text" style="margin-left:10px">
@@ -74,7 +74,7 @@
                             <span class="badge bg-secondary m-1" >@x.Name</span>
                         }
                     </span>
-                    <p class="card-text" style="margin-bottom:10px; margin-left:px">Dificulty: @recipe.Dificulty</p>
+                    <p class="card-text" style="margin-bottom:10px; margin-left:10px">Dificulty: @recipe.Dificulty</p>
                     <div class=" btn-group">
                         <a href="@recipe.RecipeLink" class="btn" style="background-color: rgb(225, 215, 198)" role="button">
                             Go to recipe link
@@ -93,6 +93,7 @@
     {
         await base.OnAfterRenderAsync(firstRender);
         //await JS.InvokeVoidAsync("InitializeSearchBar");
+        await JS.InvokeVoidAsync("MasonryLayout");
     }
 
 
@@ -112,7 +113,7 @@
 
     async Task LoadRecipes()
     {
-        ingredientsList = await IngredientService.GetAsync();
+        ingredientsList = await IngredientService.GetAsync(0,10000);
         List<int> SelectedIngredientsList = SelectedIngredients.Select(x => Int32.Parse(x)).ToList();
         recipesByIds = await RecipeService.GetByIngredientsAsync(SelectedIngredientsList);
     }

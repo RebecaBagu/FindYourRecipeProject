@@ -229,7 +229,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        ingredientsList = await IngredientService.GetAsync();
+        ingredientsList = await IngredientService.GetAsync(0,10000);
         categoryList = await CategoryService.GetAsync();
 
     }

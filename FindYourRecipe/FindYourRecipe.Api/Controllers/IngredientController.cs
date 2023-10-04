@@ -30,9 +30,9 @@ namespace FindYourRecipe.Api.Controllers
 
 
 		[HttpGet]
-		public async Task<IActionResult> GetAsync()
+		public async Task<IActionResult> GetAsync(int skip, int take)
 		{
-			return Ok(await IngredientService.GetAsync());
+			return Ok(await IngredientService.GetAsync(skip,take));
 		}
 
 
@@ -74,7 +74,11 @@ namespace FindYourRecipe.Api.Controllers
 
         }
 
-       
+		[HttpGet("count")]
+		public async Task<IActionResult> GetCountAsync()
+		{
+			return Ok(await IngredientService.GetCountAsync());
+		}
     }
 }
 

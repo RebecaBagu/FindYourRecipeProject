@@ -8,7 +8,7 @@ namespace FindYourRecipe.Contracts
 	{
 		Task<IngredientResponseModel> GetByIdAsync(int id);
 
-		Task<List<IngredientResponseModel>> GetAsync();
+		Task<List<IngredientResponseModel>> GetAsync(int skip, int take);
 
 		Task<IngredientResponseModel> CreateAsync(CreateOrUpdateIngredientRequestModel requestModel);
 
@@ -16,7 +16,7 @@ namespace FindYourRecipe.Contracts
 
 		Task DeleteAsync(int id);
 
-        
+        Task<int> GetCountAsync();
     }
 }
 

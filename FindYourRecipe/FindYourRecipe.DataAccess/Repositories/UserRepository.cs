@@ -36,14 +36,17 @@ namespace FindYourRecipe.DataAccess.Repositories
             await Database.SaveChangesAsync();
         }
 
-        public Task<List<User>> GetAsync()
+        public async  Task<List<User>> GetAsync()
         {
-            return Database.Users.OrderBy(x => x.Id).ToListAsync();
+            var list=  await Database.Users.OrderBy(x => x.Id).ToListAsync();
+            return list;
         }
 
         public async Task<User> GetByUsername(string username)
         {
-            return await Database.Users.FirstAsync(x => x.Username == username);
+            return await Database.Users
+                .Include(x=>x.Role)
+                .FirstAsync(x => x.Username == username);
         }
 
         public async Task<User> Update(int id, string name, string email, string password)
@@ -54,6 +57,19 @@ namespace FindYourRecipe.DataAccess.Repositories
             userToUpdate.Password = password;
             await Database.SaveChangesAsync();
             return userToUpdate;
+        }
+
+        public Task<User> GetByIdAsync(int id)
+        {
+            return Database.Users.FirstAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            if (await Database.Users.AnyAsync(p => p.Id == id))
+                return true;
+            else
+                return false;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace FindYourRecipe.Contracts.Models.Request
+namespace FindYourRecipe.Contracts.Models
 {
 	public class LoginRequestModel
 	{

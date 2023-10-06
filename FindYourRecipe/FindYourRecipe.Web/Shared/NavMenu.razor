@@ -1,4 +1,6 @@
-﻿<nav class="navbar navbar-expand-sm " style="background-color: rgb(87, 155, 177) ;">
+﻿@inject ILocalStorageService LocalStorage
+
+<nav class="navbar navbar-expand-sm " style="background-color: rgb(87, 155, 177) ;">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img src="/Logo.png" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
@@ -31,19 +33,36 @@
                     <NavLink class="nav-link" href="/AboutUs">About Us</NavLink>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My Profile</a>
+                    <a class="nav-link" href="/my-profile">My Profile</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tables Management</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/Recipes">Recipes</a></li>
-                        <li><a class="dropdown-item" href="/Ingredients">Ingredients</a></li>
-                        <li><a class="dropdown-item" href="/Categories">Categories</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Log In</a>
-                </li>
+                <CascadingAuthenticationState>
+                    <AuthorizeView Roles="Admin">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Tables Management</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Recipes">Recipes</a></li>
+                                <li><a class="dropdown-item" href="/Ingredients">Ingredients</a></li>
+                                <li><a class="dropdown-item" href="/Categories">Categories</a></li>
+                            </ul>
+                        </li>
+                    </AuthorizeView>
+                </CascadingAuthenticationState>
+
+                <CascadingAuthenticationState>
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Log In</a>
+                            </li>
+                        </NotAuthorized>
+                        <Authorized>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login" @onclick="Logout">Log Out</a>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
+
+                </CascadingAuthenticationState>
             </ul>
         </div>
     </div>
@@ -57,5 +76,10 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async void Logout()
+    {
+        await LocalStorage.RemoveItemAsync("user");
     }
 }

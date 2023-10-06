@@ -1,4 +1,6 @@
 ﻿@page "/categories"
+
+@attribute [Authorize(Roles = "Admin")]
 @inject ICategoryService CategoryService
 @inject IJSRuntime JsRuntime
 
@@ -26,7 +28,7 @@
                 <tr>
                     <td>@category.Id</td>
                     <td>@category.Name</td>
-                  
+
                     <td>
                         <button type="button" class="btn btn-danger" @onclick="async () => { await DeleteCategoryClick(category.Id); }">Delete</button>
                     </td>

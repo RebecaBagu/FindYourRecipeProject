@@ -1,13 +1,15 @@
 ﻿using FindYourRecipe.Application;
 using FindYourRecipe.Contracts;
 using FindYourRecipe.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
 	[Route("category-recipes")]
-	public class CategoriesRecipesControllers :ControllerBase
+    [Authorize(Roles = "Admin")]
+    public class CategoriesRecipesControllers :ControllerBase
 	{
 		ICategoryRecipeService CategoryRecipeService { get; }
 

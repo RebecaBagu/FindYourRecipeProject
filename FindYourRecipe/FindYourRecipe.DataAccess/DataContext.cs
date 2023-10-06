@@ -12,12 +12,15 @@ namespace FindYourRecipe.DataAccess
         public DbSet<IngredientRecipe> IngredientsRecipes { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+          
             modelBuilder.Entity<IngredientRecipe>()
                 .HasKey(sc => new { sc.RecipeId, sc.IngredientId });
+
             modelBuilder.Entity<CategoryRecipe>()
                 .HasKey(sc => new { sc.RecipeId, sc.CategoryId });
 
@@ -45,7 +48,13 @@ namespace FindYourRecipe.DataAccess
                 .HasKey(p => p.Id);
 
             modelBuilder.Entity<CategoryRecipe>()
-                .HasKey(p => p.Id); 
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<Role>()
+              .HasMany<User>(u => u.Users)
+              .WithOne(r => r.Role)
+              .HasForeignKey(u => u.RoleId);
+
         }
 
 

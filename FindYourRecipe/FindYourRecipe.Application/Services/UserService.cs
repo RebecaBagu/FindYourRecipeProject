@@ -1,9 +1,9 @@
 ﻿using System;
 using AutoMapper;
 using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.Contracts.Models.Request;
 using FindYourRecipe.Contracts.Models.Response;
-using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Entities;
 using FindYourRecipe.DataAccess.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -29,9 +29,23 @@ namespace FindYourRecipe.Application.Services
             return Mapper.Map<User, UserResponseModel>(user);
         }
 
+        public async Task<UserResponseModel> UpdateAsync(int id , CreateOrUpdateUserRequestModel request)
+        {
+            if (await Repository.ExistsAsync(id))
+            {
+                var userUpdated = await Repository.Update(id, request.Name, request.Email, request.Password);
+                return Mapper.Map<User, UserResponseModel>(userUpdated);
+            }
+            else
+                throw new NotFoundException(id);
+        }
+
         public async Task Delete(int id)
         {
-            await Repository.DeleteByIdAsync(id);
+            if(await Repository.ExistsAsync(id))
+                await Repository.DeleteByIdAsync(id);
+            else
+                throw new NotFoundException(id);
         }
 
         public async Task<List<UserResponseModel>> GetAsync()
@@ -64,10 +78,16 @@ namespace FindYourRecipe.Application.Services
 
         }
 
-        public async Task<UserResponseModel> Update(int id, CreateOrUpdateUserRequestModel request)
+        public async Task<UserResponseModel> GetByIdAsync(int id)
         {
-            var userToUpdate =await  Repository.Update(id, request.Name, request.Email, request.Password);
-            return Mapper.Map<User, UserResponseModel>(userToUpdate);
+            if (await Repository.ExistsAsync(id))
+            {
+                var user = await Repository.GetByIdAsync(id);
+                return Mapper.Map<User, UserResponseModel>(user);
+            }
+            else
+                throw new NotFoundException(id);
+            
         }
     }
 }

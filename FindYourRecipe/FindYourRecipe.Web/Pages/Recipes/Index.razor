@@ -1,4 +1,6 @@
 ﻿@page "/recipes"
+
+@attribute [Authorize(Roles = "Admin")]
 @inject IRecipeService RecipeService
 @inject IJSRuntime JsRuntime
 

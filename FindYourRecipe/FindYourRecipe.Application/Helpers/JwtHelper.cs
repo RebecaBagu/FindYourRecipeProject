@@ -17,7 +17,7 @@ public class JwtHelper
             new Claim("id", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.RoleId.ToString())
+            new Claim(ClaimTypes.Role, user.Role.RoleName)
         };
 
         var claimIdentity = new ClaimsIdentity(claims);

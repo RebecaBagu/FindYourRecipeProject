@@ -1,4 +1,5 @@
 ﻿using System;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.Contracts.Models.Request;
 using FindYourRecipe.Contracts.Models.Response;
 
@@ -12,7 +13,9 @@ namespace FindYourRecipe.Contracts
 
         Task<List<UserResponseModel>> GetAsync();
 
-        Task<UserResponseModel> Update(int id, CreateOrUpdateUserRequestModel request);
+        Task<UserResponseModel> GetByIdAsync(int id);
+
+        Task<UserResponseModel> UpdateAsync(int id, CreateOrUpdateUserRequestModel request);
 
         Task<LoginResponseModel> LoginAsync(LoginRequestModel requestModel);
     }

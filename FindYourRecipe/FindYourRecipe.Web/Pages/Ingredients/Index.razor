@@ -1,4 +1,6 @@
 ﻿@page "/ingredients"
+
+@attribute [Authorize(Roles = "Admin")]
 @using System.ComponentModel.DataAnnotations;
 @inject IIngredientService IngredientService
 @inject IJSRuntime JsRuntime
@@ -55,7 +57,7 @@
             }
 
             <li class="page-item active"><span class="page-link"> @(currentPage+1) / @totalPages </span></li>
-            @if (currentPage == (totalPages-1))
+            @if (currentPage == (totalPages - 1))
             {
                 <li class="page-item disabled"><span class="page-link">Next</span></li>
             }

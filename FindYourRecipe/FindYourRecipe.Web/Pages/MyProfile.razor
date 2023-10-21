@@ -1,73 +1,31 @@
 ﻿@page "/my-profile"
-@inject IUserService UserService
-@inject ILocalStorageService LocalStorage
-
-
-<AuthorizeView>
-    <Authorized>
-        <div class="container p-5 " style=" text-align:center ;background-color: rgb(225, 215, 198); margin-top: 15px;">
-            <h1 style="font-size: 50px;">My Profile</h1>
-        </div>
-        <div class="container">
+<div class="container" style="margin-top:250px">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
             <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div class="col-sm-4" style="background-color: rgb(87, 155, 177) ">
-                            <h3>My Profile details</h3>
-
-
-                        </div>
-                        <div class="col-sm-8" style="background-color: rgb(225, 215, 198)">
-                            <h3>Favorite recipes</h3>
-
-
-                        </div>
-                    </div>
+                <div class="col-sm" style="background-color: rgb(225, 215, 198)">
+                    <h1 style="text-align:center ;margin-top:15px">Page under construction</h1>
+                    <h2 style="text-align:center;margin-top:5px">We are mixing the ingredients</h2>
+                    
+                        <video autoplay style="margin-left:115px">
+                            <source src="video.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    
                 </div>
-                <div class="col-sm-1"></div>
             </div>
+
         </div>
-    </Authorized>
-    <NotAuthorized>
-        <div class="container p-5 " style=" text-align:center ;background-color: rgb(225, 215, 198); margin-top: 15px;">
-            <h1 style="font-size: 50px;">My Profile</h1>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-10">
-                    <div class="col-sm-4" style="background-color: rgb(87, 155, 177) ">
-                        <h3>My Profile details</h3>
+        <div class="col-sm-2"></div>
+    </div>
+</div>
 
-
-                    </div>
-                    <div class="col-sm-8" style="background-color: rgb(225, 215, 198)">
-                        <h3 style="text-align:center; margin-top:30px">You are not logged into your account</h3>
-                        <div class=" btn-group , center" >
-                            <a href="/Login" class="btn" style="background-color: rgb(87, 155, 177)" role="button">
-                                Go to Login
-                            </a>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div class="col-sm-1"></div>
-            </div>
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
 
 @code {
 
-    UserResponseModel user;
-    protected async override Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        user = await LocalStorage.GetItemAsync<UserResponseModel>("user");
-        //user = await UserService.GetByIdAsync(userId);
 
-    }
+
 }
+
 

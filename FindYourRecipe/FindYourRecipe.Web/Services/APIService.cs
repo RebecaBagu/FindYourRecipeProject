@@ -31,9 +31,17 @@ namespace FindYourRecipe.Web.Services
 			var json = JsonConvert.SerializeObject(request);
 			var data = new StringContent(json, Encoding.UTF8, "application/json");
 			var result = await _client.PostAsync(route, data);
-			result.EnsureSuccessStatusCode();
-			var jsonResult= await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(jsonResult);
+			try
+			{
+                result.EnsureSuccessStatusCode();
+                var jsonResult = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(jsonResult);
+            }
+			catch
+			{
+                var exceptionMesage=await result.Content.ReadAsStringAsync();
+				throw new Exception(exceptionMesage);
+            }
         }
 
         protected async Task<T> PutAsync<T>(string route, object request)

@@ -46,7 +46,7 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             return await Database.Users
                 .Include(x=>x.Role)
-                .FirstAsync(x => x.Username == username);
+                .FirstOrDefaultAsync(x => x.Username == username);
         }
 
         public async Task<User> Update(int id, string name, string email, string password)

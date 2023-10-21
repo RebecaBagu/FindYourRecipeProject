@@ -17,17 +17,28 @@
                     <EditForm Model="@requestModel" OnSubmit="HandleSubmitAsync" style="margin-top:30px">
                         <div class="mb-3">
                             <label class="form-label">Username</label>
-                            <input type="username" name="" required="" class="form-control"  @bind-value="requestModel.Username">
+                            <input type="username" name="" required="" class="form-control" @bind-value="requestModel.Username">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <input type="password" name="" required="" class="form-control" @bind-value="requestModel.Password">
                         </div>
+                        <div class="mb-3">
+                            @if (exceptionMessage!=null)
+                            {
+                                <p>@exceptionMessage</p>
+                            }
+
+                        </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="mb-3" style="margin-top:5px">
+                            <a href="/register">Click here to register</a>
+                        </div>
                     </EditForm>
                 </div>
             </div>
+
         </div>
         <div class="col-sm-2"></div>
     </div>
@@ -36,6 +47,7 @@
 @code {
 
     private LoginRequestModel requestModel = new();
+    string exceptionMessage;
     protected async override Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -50,14 +62,23 @@
 
     public async Task HandleSubmitAsync()
     {
-        var response = await UserService.LoginAsync( requestModel);
+        try
+        {
+            var response = await UserService.LoginAsync(requestModel);
 
-        await LocalStorage.SetItemAsync("user", response);
+            await LocalStorage.SetItemAsync("user", response);
 
-        await AuthState.GetAuthenticationStateAsync();
+            await AuthState.GetAuthenticationStateAsync();
 
-        // Redirect to home after user is authenticated
-        NavManager.NavigateTo("/");
+            // Redirect to home after user is authenticated
+            NavManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            exceptionMessage = ex.Message;
+        }
+
+
     }
 }
 

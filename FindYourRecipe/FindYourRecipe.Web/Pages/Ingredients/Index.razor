@@ -1,0 +1,121 @@
+﻿@page "/ingredients"
+
+@attribute [Authorize(Roles = "Admin")]
+@using System.ComponentModel.DataAnnotations;
+@inject IIngredientService IngredientService
+@inject IJSRuntime JsRuntime
+
+<PageTitle>Ingredients</PageTitle>
+<div class="container" style="margin-top:15px; margin-bottom:15px">
+    <div class=" btn-group">
+        <a href="/ingredients/create" class="btn" style="background-color: rgb(225, 215, 198)" role="button">
+            Create Ingredient
+        </a>
+    </div>
+</div>
+<div class="container mt-3">
+    <h2>Ingredients</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var ingredient in ingredientsList)
+            {
+                <tr>
+                    <td>@ingredient.Id</td>
+                    <td>@ingredient.Name</td>
+                    <td>@ingredient.Category</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="async () => { await DeleteIngredientsClick(ingredient.Id); }">Delete</button>
+                    </td>
+                    <td>
+                        <div class=" btn-group">
+                            <a href="/ingredients/@ingredient.Id" class="btn btn-success" role="button">Update</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </thead>
+        <tbody>
+        </tbody>
+
+    </table>
+    <nav>
+        <ul class="pagination">
+            @if (currentPage <= 0)
+            {
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            }
+            else
+            {
+                <li class="page-item" @onclick="PreviousPage"><span class="page-link">Previous</span></li>
+            }
+
+            <li class="page-item active"><span class="page-link"> @(currentPage+1) / @totalPages </span></li>
+            @if (currentPage == (totalPages - 1))
+            {
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            }
+            else
+            {
+                <li class="page-item" @onclick="NextPage"><span class="page-link">Next</span></li>
+            }
+
+        </ul>
+    </nav>
+
+</div>
+
+@code {
+
+    int currentPage = 0;
+    int pageSize = 10;
+    int ingredientCount;
+    int totalPages;
+    List<IngredientResponseModel> ingredientsList = new List<IngredientResponseModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+        ingredientCount = await IngredientService.GetCountAsync();
+        totalPages = ingredientCount / pageSize + 1;
+    }
+
+    public async Task DeleteIngredientsClick(int id)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            await IngredientService.DeleteAsync(id);
+
+            ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+
+            this.StateHasChanged();
+        }
+
+
+    }
+
+    async void PreviousPage()
+    {
+        currentPage--;
+        ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+        StateHasChanged();
+    }
+
+    async void NextPage()
+    {
+        currentPage++;
+        ingredientsList = await IngredientService.GetAsync(currentPage * pageSize, pageSize);
+        StateHasChanged();
+    }
+
+
+
+}
+

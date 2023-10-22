@@ -10,6 +10,8 @@ namespace FindYourRecipe.Application
 		{
 
 		}
-	}
+        public NotFoundException(string? message) : base(message)
+        { }
+    }
 }
 

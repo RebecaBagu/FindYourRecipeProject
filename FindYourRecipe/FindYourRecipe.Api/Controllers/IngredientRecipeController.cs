@@ -1,14 +1,15 @@
-﻿using System;
-using FindYourRecipe.Application;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
+﻿using FindYourRecipe.Application;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
-	public class IngredientsRecipesControllers: ControllerBase
+	[Route("ingredient-recipes")]
+    [Authorize(Roles = "Admin")]
+    public class IngredientsRecipesControllers: ControllerBase
 	{
 		IIngredientRecipeService IngredientRecipeService { get; }
 		public IngredientsRecipesControllers(IIngredientRecipeService ingredientRecipeService)
@@ -16,14 +17,23 @@ namespace FindYourRecipe.Api.Controllers
 			IngredientRecipeService = ingredientRecipeService;
 		}
 
-		[HttpPut]
+        
+        [HttpPost]
 		public async Task<IActionResult> CreateAsync( CreateIngredientRecipeRequestModel request)
 		{
 			return Ok(await IngredientRecipeService.CreateAsync(request));
 			
 		}
 
-		[HttpDelete("{id}")]
+        
+        [HttpPut]
+		public async Task<IActionResult> UpdateAsync(int id, CreateIngredientRecipeRequestModel request)
+		{
+			return Ok(await IngredientRecipeService.UpdateAsync(id, request));
+		}
+
+        
+        [HttpDelete("{id}")]
 		public async Task< IActionResult> DeleteAsync(int id)
 		{
 			try
@@ -37,6 +47,15 @@ namespace FindYourRecipe.Api.Controllers
 			}
 
 		}
-	}
+
+        
+        [HttpDelete("by-recipeId/{recipeId}")]
+        public async Task<IActionResult> DeleteByRecipeIdAsync(int recipeId)
+        {
+            await IngredientRecipeService.DeleteByRecipeIdAsync(recipeId);
+            return Ok();
+
+        }
+    }
 }
 

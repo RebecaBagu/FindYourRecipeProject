@@ -1,0 +1,98 @@
+﻿@page "/categories/{categoryId}"
+@inject ICategoryService CategoryService
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Update Category</PageTitle>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <EditForm Model="@categoryToUpdate" OnValidSubmit="HandleValidSubmitAsync">
+            <DataAnnotationsValidator />
+            <div class="container" style="margin-top: 100px">
+                <div class="row">
+                    <h2 style="text-align:center">Update Category</h2>
+                </div>
+               
+                <div class="row">
+                    <label for="category">Category: </label>
+                    <InputText id="category" @bind-Value="@categoryToUpdate.Name"></InputText>
+                    <ValidationMessage For="@(()=> categoryToUpdate.Name)"></ValidationMessage>
+                </div>
+
+                <div class="row" style="margin-top:20px">
+                    <button type="submit" class="btn btn-primary">Update category</button>
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+
+
+@if (displayMessage)
+{
+
+    <div class="modal show" style="display: block; backdrop-filter: blur(4px) " id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">The Category was Updated</h4>
+                </div>
+                <div class="modal=body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Category id: @newCategory.Id</p>
+                                <p>Category name: @newCategory.Name</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="RefreshPage">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+
+@code { protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var category = await CategoryService.GetByIdAsync(int.Parse(CategoryId));
+        categoryToUpdate.Name = category.Name;
+    }
+
+    [Parameter]
+    public string CategoryId { get; set; }
+
+    private CreateOrUpdateCategoryRequestModel categoryToUpdate = new();
+
+    private CategoryResponseModel newCategory = new();
+
+    private bool displayMessage = false;
+
+    public async Task HandleValidSubmitAsync()
+    {
+        newCategory = await CategoryService.UpdateAsync(int.Parse(CategoryId), categoryToUpdate);
+        displayMessage = true;
+
+
+    }
+    private void RefreshPage()
+    {
+        NavigationManager.NavigateTo("/categories", true);
+    }
+}
+@code {
+
+}
+

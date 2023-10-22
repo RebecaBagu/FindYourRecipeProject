@@ -1,8 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models.Request;
-using FindYourRecipe.Application.Models.Response;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 
@@ -18,6 +17,12 @@ namespace FindYourRecipe.Application.Services
             Repository = repository;
             Mapper = mapper;
 		}
+
+        public async Task<List<CategoryResponseModel>> GetAsync()
+        {
+            var categories = await Repository.GetAsync();
+            return Mapper.Map<List<Category>, List<CategoryResponseModel>>(categories);
+        }
 
         public async Task<CategoryResponseModel> CreateAsync(CreateOrUpdateCategoryRequestModel request)
         {
@@ -55,6 +60,8 @@ namespace FindYourRecipe.Application.Services
             else
                 throw new NotFoundException(id);
         }
+
+       
     }
 }
 

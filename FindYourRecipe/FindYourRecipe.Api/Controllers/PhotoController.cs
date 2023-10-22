@@ -1,18 +1,15 @@
-﻿using System;
-using FindYourRecipe.Application;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Services;
-using FindYourRecipe.DataAccess;
-using FindYourRecipe.DataAccess.Interfaces;
-using FindYourRecipe.DataAccess.Repositories;
+﻿using FindYourRecipe.Application;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
-	public class PhotosControllers :ControllerBase
+	[Route("photos")]
+    [Authorize(Roles = "Admin")]
+    public class PhotosControllers :ControllerBase
 	{
 		IRecipeService RecipeService { get; }
 		IPhotoService PhotoService { get; }
@@ -24,7 +21,8 @@ namespace FindYourRecipe.Api.Controllers
         }
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetByIdAsync(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByIdAsync(int id)
 		{
 			try
 			{
@@ -37,7 +35,8 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpGet("{recipeId}")]
-		public async Task<IActionResult> GetByRecipeIdAsync(int recipeId)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByRecipeIdAsync(int recipeId)
 		{
 			try
 			{
@@ -49,14 +48,16 @@ namespace FindYourRecipe.Api.Controllers
 			}
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> CreateAsync(CreatePhotoRequestModel request)
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(CreatePhotoRequestModel request)
 		{
 			return Ok(await PhotoService.CreateAsync(request));
 		}
 
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteAsync(int id)
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
 		{
 			try
 			{
@@ -68,6 +69,14 @@ namespace FindYourRecipe.Api.Controllers
 				return NotFound();
 			}
 		}
-	}
+
+        [HttpDelete("by-recipeId/{recipeId}")]
+        public async Task<IActionResult> DeleteByRecipeIdAsync(int recipeId)
+        {
+			await PhotoService.DeleteByRecipeIdAsync(recipeId);
+            return Ok();
+
+        }
+    }
 }
 

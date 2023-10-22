@@ -1,17 +1,15 @@
-﻿using System;
-using FindYourRecipe.Application;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Services;
-using FindYourRecipe.DataAccess;
-using FindYourRecipe.DataAccess.Repositories;
+﻿using FindYourRecipe.Application;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
-	public class RecipesControllers :ControllerBase
+	[Route("recipes")]
+    [Authorize(Roles = "Admin")]
+    public class RecipesControllers :ControllerBase
 	{
 		IRecipeService RecipeService { get; }
 		public RecipesControllers(IRecipeService recipeService)
@@ -20,7 +18,8 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetByIdAsync(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByIdAsync(int id)
 		{
 			try
 			{
@@ -35,17 +34,19 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetAsync()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAsync()
 		{
-			return Ok(await RecipeService.GetAsync());
+            return Ok(await RecipeService.GetAsync());
 		}
 
 		[HttpGet("by-ingredients")]
-		public async Task<IActionResult> GetRecipeByIngredientsAsync([FromQuery] List<int>ingredientIds)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetRecipeByIngredientsAsync( [FromQuery]List<int>list)
 		{
 			try
 			{
-				return Ok(await RecipeService.GetByIngredientsAsync(ingredientIds));
+                return Ok(await RecipeService.GetByIngredientsAsync(list));
 			}
 			catch (NotFoundException)
 			{
@@ -53,14 +54,16 @@ namespace FindYourRecipe.Api.Controllers
 			}
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> CreateAsync([FromQuery] CreateOrUpdateRecipeRequestModel request)
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync( CreateOrUpdateRecipeRequestModel request)
 		{
 			return Ok(await RecipeService.CreateAsync(request));
         }
 
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CreateOrUpdateRecipeRequestModel request)
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateRecipeRequestModel request)
 		{
 			try
 			{
@@ -72,13 +75,23 @@ namespace FindYourRecipe.Api.Controllers
 			}
 		}
 
-		[HttpDelete]
+
+        [HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAsync(int id)
 		{
-			await RecipeService.DeleteAsync(id);
+			try
+			{
+				await RecipeService.DeleteAsync(id);
 
-            return Ok();
-		}
+				return Ok();
+			}
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+		
 	}
 }
 

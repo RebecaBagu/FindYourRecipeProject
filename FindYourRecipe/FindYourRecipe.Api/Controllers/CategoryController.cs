@@ -1,15 +1,15 @@
-﻿using System;
-using FindYourRecipe.Application;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models.Request;
-using FindYourRecipe.DataAccess.Interfaces;
+﻿using FindYourRecipe.Application;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
-	public class CategoriesControllers: ControllerBase
+	[Route("categories")]
+    [Authorize(Roles = "Admin")]
+    public class CategoriesControllers: ControllerBase
 	{
 		ICategoryService CategoryService { get; }
 
@@ -18,8 +18,16 @@ namespace FindYourRecipe.Api.Controllers
 			CategoryService = categoryService;
         }
 
+		[HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAsync()
+		{
+			return Ok(await CategoryService.GetAsync());
+		}
+
 		[HttpGet("{id}")]
-		public async Task< IActionResult> GetByIdAsync(int id)
+        [AllowAnonymous]
+        public async Task< IActionResult> GetByIdAsync(int id)
 		{
 			try
 			{
@@ -32,13 +40,13 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateAsync(CreateOrUpdateCategoryRequestModel request)
+        public async Task<IActionResult> CreateAsync(CreateOrUpdateCategoryRequestModel request)
 		{
 			return Ok(await CategoryService.CreateAsync(request));
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateCategoryRequestModel request)
+        public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateCategoryRequestModel request)
 		{
 			try
 			{
@@ -51,7 +59,7 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task< IActionResult> DeleteAsync(int id)
+        public async Task< IActionResult> DeleteAsync(int id)
 		{
 			try
 			{
@@ -63,6 +71,8 @@ namespace FindYourRecipe.Api.Controllers
 				return NotFound();
 			}
         }
-	}
+
+     
+    }
 }
 

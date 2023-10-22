@@ -5,6 +5,8 @@ namespace FindYourRecipe.DataAccess.Interfaces
 	{
 		Task<Category> GetByIdAsync(int id);
 
+        Task<List<Category>> GetAsync();
+
 		Task<Category> CreateAsync(string name);
 
         Task<Category> UpdateAsync(int id, string name);
@@ -12,6 +14,8 @@ namespace FindYourRecipe.DataAccess.Interfaces
         Task DeleteAsync(int id);
 
         Task< bool> ExistsAsync(int id);
+
+        
     }
 
 }

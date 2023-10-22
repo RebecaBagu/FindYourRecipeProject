@@ -30,14 +30,19 @@ namespace FindYourRecipe.DataAccess.Repositories
             await Database.SaveChangesAsync();
         }
 
-        public Task<List<Ingredient>> GetAsync()
+        public Task<List<Ingredient>> GetAsync(int skip, int take)
         {
-            return Database.Ingredients.OrderBy(x => x.Id).ToListAsync();
+            return Database.Ingredients
+                .Include(x => x.IngredientRecipes)
+                .OrderBy(x => x.Id).Skip(skip).Take(take)
+                .ToListAsync();
         }
 
         public Task<Ingredient> GetByIdAsync(int id)
         {
-            return Database.Ingredients.FirstAsync(x => x.Id == id);
+            return Database.Ingredients
+                .Include(x=>x.IngredientRecipes)
+                .FirstAsync(x => x.Id == id);
         }
 
         public async Task<Ingredient> UpdateAsync(int id, string name, string category)
@@ -57,6 +62,11 @@ namespace FindYourRecipe.DataAccess.Repositories
             }
             else
                 return false;
+        }
+
+        public Task<int> GetCountAsync()
+        {
+            return Database.Ingredients.CountAsync();
         }
     }
 }

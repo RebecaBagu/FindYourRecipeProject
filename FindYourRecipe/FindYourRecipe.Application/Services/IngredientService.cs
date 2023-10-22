@@ -1,8 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Services;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 using FindYourRecipe.DataAccess.Repositories;
@@ -33,9 +32,11 @@ namespace FindYourRecipe.Application.Services
                 throw new NotFoundException(id) ;
         }
 
-        public async Task<List<IngredientResponseModel>> GetAsync()
+        
+
+        public async Task<List<IngredientResponseModel>> GetAsync(int skip, int take)
         {
-            var ingredientsList =await  Repository.GetAsync();
+            var ingredientsList =await  Repository.GetAsync(skip,take);
             return Mapper.Map<List<Ingredient>, List<IngredientResponseModel>>(ingredientsList);
         }
 
@@ -61,6 +62,10 @@ namespace FindYourRecipe.Application.Services
                 throw new NotFoundException(id);
 
 
+        }
+        public async Task<int> GetCountAsync()
+        {
+            return await Repository.GetCountAsync();
         }
     }
 }

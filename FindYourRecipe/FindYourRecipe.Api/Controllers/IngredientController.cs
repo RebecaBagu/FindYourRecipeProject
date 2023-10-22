@@ -1,18 +1,15 @@
-﻿using System;
-using Azure.Core;
-using FindYourRecipe.Application;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Services;
-using FindYourRecipe.DataAccess.Interfaces;
-using FindYourRecipe.DataAccess.Repositories;
+﻿using FindYourRecipe.Application;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindYourRecipe.Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
-	public class IngredientsControllers : ControllerBase
+	[Route("ingredients")]
+    [Authorize(Roles = "Admin")]
+    public class IngredientsControllers : ControllerBase
 	{
 		IIngredientService IngredientService { get; }
 		public IngredientsControllers(IIngredientService ingredientService)
@@ -21,7 +18,8 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetByIdAsync(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByIdAsync(int id)
 		{
 			try
 			{
@@ -35,23 +33,26 @@ namespace FindYourRecipe.Api.Controllers
 
 
 		[HttpGet]
-		public async Task<IActionResult> GetAsync()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAsync(int skip, int take)
 		{
-			return Ok(await IngredientService.GetAsync());
+			return Ok(await IngredientService.GetAsync(skip,take));
 		}
 
 
-		[HttpPost]
+        
+        [HttpPost]
 		public async Task<IActionResult> CreateAsync(CreateOrUpdateIngredientRequestModel request)
 		{
 			return Ok(await IngredientService.CreateAsync(request));
 		}
 
-		
 
 
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CreateOrUpdateIngredientRequestModel request)
+
+        
+        [HttpPut("{id}")]
+		public async Task<IActionResult> UpdateAsync(int id, CreateOrUpdateIngredientRequestModel request)
 		{
 			try
 			{
@@ -64,7 +65,8 @@ namespace FindYourRecipe.Api.Controllers
 		}
 
 
-		[HttpDelete("{id}")]
+        
+        [HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAsync(int id)
 		{
             try
@@ -78,6 +80,13 @@ namespace FindYourRecipe.Api.Controllers
             }
 
         }
-	}
+
+        
+        [HttpGet("count")]
+		public async Task<IActionResult> GetCountAsync()
+		{
+			return Ok(await IngredientService.GetCountAsync());
+		}
+    }
 }
 

@@ -12,6 +12,8 @@ namespace FindYourRecipe.DataAccess.Interfaces
 		Task<Photo> CreateAsync(int recipeId, string link);
 
         Task<bool> ExistsAsync(int id);
+
+        Task DeleteByRecipeIdAsync(int recipeId);
     }
 }
 

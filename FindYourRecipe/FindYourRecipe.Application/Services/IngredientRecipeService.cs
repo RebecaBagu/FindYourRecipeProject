@@ -1,8 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Models.Response;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 
@@ -31,6 +30,19 @@ namespace FindYourRecipe.Application.Services
             else
                 throw new NotFoundException(id);
         }
+
+        public async Task<IngredientRecipeResponseModel> UpdateAsync(int id,CreateIngredientRecipeRequestModel request)
+        {
+            var ingredientRecipe = await Repository.UpdateAsync(id,request.IngredientId, request.RecipeId, request.Quantity);
+            return Mapper.Map<IngredientRecipe, IngredientRecipeResponseModel>(ingredientRecipe);
+        }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            await Repository.DeleteByRecipeIdAsync(recipeId);
+        }
+
+
     }
 }
 

@@ -1,10 +1,126 @@
 ﻿@page "/"
+@inject IJSRuntime JS
+@inject IIngredientService IngredientService
+@inject IRecipeService RecipeService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container p-5 " style=" text-align:center ;background-color: rgb(225, 215, 198); margin-top: 15px;">
+    <h1 style="font-size: 50px;">Find Your Recipe</h1>
 
-Welcome to your new app.
+    <style>
+        .select2-selection {
+            height: 80px;
+            font-size: 25px;
+        }
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+            padding-left: 10px;
+        }
 
+        .select2-container .select2-search--inline textarea.select2-search__field {
+            height: 40px;
+            text-align: center;
+            margin-top: 17px;
+        }
+    </style>
+</div>
+<div class="container" style="margin-top: 150px;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <h1 style="font-size: 20px;margin-bottom: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;Choose the ingredients you want to use in the recipe: </h1>
+            <select id="SearchBar" class="form-control" multiple="multiple">
+                @foreach (var ingredient in ingredientsList)
+                {
+                    <option value="@ingredient.Id">@ingredient.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+</div>
+
+<div class="container p-2" style="margin-top: 25px; margin-bottom:25px">
+    <div class="row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2  d-grid">
+            <button type="button" class="btn btn-outline-dark" @onclick="SearchClicked">Search</button>
+        </div>
+        <div class="col-sm-5"></div>
+    </div>
+</div>
+
+<div class="container" style="background-color: rgb(225, 215, 198); margin-top: 200px; margin-bottom:25px">
+    <h2 class="text=md-left"> &nbsp;&nbsp;&nbsp;Our recipes </h2>
+</div>
+
+<div class="container">
+    <div class="row" id="Cards" data-masonry="{'percentPosition': true }">
+        @foreach (var recipe in recipesByIds)
+        {<div class="col-md-4 mb-4">
+                <div class="card">
+                    @foreach (var photo in recipe.Photos)
+                    {
+                        <img style="width:auto; height:450px" src="@photo.Link" />
+                    }
+                    <h5 class="card-title" style="background-color: rgb(225, 215, 198)">&nbsp;@recipe.Title</h5>
+                    <p class="card-text" style="margin-left: 10px">Cuisine: @recipe.Cuisine</p>
+                    <p class="card-text" style="margin-left: 10px"> @recipe.Description</p>
+                    <span class="card-text" style="margin-left:10px">
+                        @foreach (var categoryRecipe in recipe.CategoryRecipes)
+                        {
+                            var x = categoryRecipe.Category;
+                            <span class="badge bg-secondary m-1" >@x.Name</span>
+                        }
+                    </span>
+                    <p class="card-text" style="margin-bottom:10px; margin-left:10px">Dificulty: @recipe.Dificulty</p>
+                    <div class=" btn-group">
+                        <a href="@recipe.RecipeLink" class="btn" style="background-color: rgb(225, 215, 198)" role="button">
+                            Go to recipe link
+                        </a>
+                    </div>
+
+                </div>
+            </div>}
+    </div>
+</div>
+
+@code{
+    string[] SelectedIngredients { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        await JS.InvokeVoidAsync("InitializeSearchBar");
+
+        await JS.InvokeVoidAsync("MasonryLayout");
+    }
+
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        SelectedIngredients = new string[0];
+        await LoadRecipes();
+
+    }
+
+    async Task SearchClicked()
+    {
+        SelectedIngredients=await JS.InvokeAsync <string[]>("GetSearchBarValues");
+        await LoadRecipes();
+        this.StateHasChanged();
+    }
+
+    async Task LoadRecipes()
+    {
+        ingredientsList = await IngredientService.GetAsync(0,10000);
+        List<int> SelectedIngredientsList = SelectedIngredients.Select(x => Int32.Parse(x)).ToList();
+        recipesByIds = await RecipeService.GetByIngredientsAsync(SelectedIngredientsList);
+    }
+
+    List<IngredientResponseModel> ingredientsList = new List<IngredientResponseModel>();
+    List<RecipeResponseModel> recipesByIds = new List<RecipeResponseModel>();
+
+}

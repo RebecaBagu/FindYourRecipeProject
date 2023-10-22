@@ -1,8 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Models.Response;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 
@@ -30,6 +29,28 @@ namespace FindYourRecipe.Application.Services
                 await Repository.DeleteAsync(id);
             else
                 throw new NotFoundException(id);
+        }
+
+        public async Task<CategoryRecipeResponseModel> GetByIdAsync(int id)
+        {
+            if (await Repository.ExistsAsync(id))
+            {
+                var categoryRecipe= await Repository.GetByIdAsync(id);
+                return Mapper.Map<CategoryRecipe,CategoryRecipeResponseModel>(categoryRecipe);
+            }
+            else
+                throw new NotFoundException(id);
+        }
+
+        public async Task<List<CategoryRecipeResponseModel>> GetAsync()
+        {
+            var categoryRecipes=await Repository.GetAsync();
+            return Mapper.Map<List<CategoryRecipe>, List<CategoryRecipeResponseModel>>(categoryRecipes);
+        }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            await Repository.DeleteByRecipeIdAsync(recipeId);
         }
     }
 }

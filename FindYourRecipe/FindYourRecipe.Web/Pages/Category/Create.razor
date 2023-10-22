@@ -1,0 +1,85 @@
+﻿@page "/categories/create"
+@inject ICategoryService CategoryService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Category</PageTitle>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <EditForm Model="@category" OnValidSubmit="HandleValidSubmitAsync">
+            <DataAnnotationsValidator />
+            <div class="container" style="margin-top: 100px">
+                <div class="row">
+                    <h2 style="text-align:center">Create Category</h2>
+                </div>
+                <div class="row">
+                    <label for="name">Name: </label>
+                    <InputText id="name" @bind-Value="@category.Name"></InputText>
+                    <ValidationMessage For="@(()=> category.Name)"></ValidationMessage>
+
+                </div>
+                <div class="row" style="margin-top:20px">
+                    <button type="submit" class="btn btn-primary">Create Category</button>
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+@if (displayMessage)
+{
+    <div class="modal show" style="display: block; backdrop-filter: blur(4px) " id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">The category was created</h4>
+                </div>
+                <div class="modal=body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Category id: @newCategory.Id</p>
+                                <p>Category name: @newCategory.Name</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="RefreshPage">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+@code {
+    private CreateOrUpdateCategoryRequestModel category = new();
+
+    private CategoryResponseModel newCategory = new();
+
+    private bool displayMessage = false;
+
+    public async Task HandleValidSubmitAsync()
+    {
+        newCategory = await CategoryService.CreateAsync(category);
+        displayMessage = true;
+        category = new();
+
+    }
+
+    private void RefreshPage()
+    {
+        NavigationManager.NavigateTo("/categories/create", true);
+    }
+}
+
+
+
+
+

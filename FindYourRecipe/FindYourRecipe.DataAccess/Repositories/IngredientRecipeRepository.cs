@@ -16,11 +16,11 @@ namespace FindYourRecipe.DataAccess.Repositories
         {
             IngredientRecipe ingredientRecipe = new IngredientRecipe()
             {
-                IngredientId = ingredientId,
-                RecipeId = recipeId,
+                IngredientId=ingredientId,
+                RecipeId=recipeId,
                 Quantity = quantity,
             };
-            Database.Add(ingredientRecipe);
+            Database.IngredientsRecipes.Add(ingredientRecipe);
             await Database.SaveChangesAsync();
             return ingredientRecipe;
         }
@@ -54,6 +54,15 @@ namespace FindYourRecipe.DataAccess.Repositories
             }
             else
                 return false;
+        }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            var ingredients = await (from ingredient in Database.IngredientsRecipes
+                              where (ingredient.RecipeId == recipeId)
+                              select ingredient).ToListAsync();
+            Database.RemoveRange(ingredients);
+            await Database.SaveChangesAsync();
         }
     }
 }

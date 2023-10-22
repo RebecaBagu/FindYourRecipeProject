@@ -1,8 +1,9 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Models.Response;
+using FindYourRecipe.Contracts.Models;
+using FindYourRecipe.Contracts.Models.Response;
 using FindYourRecipe.DataAccess;
+using FindYourRecipe.DataAccess.Entities;
 
 namespace FindYourRecipe.Application
 {
@@ -17,6 +18,7 @@ namespace FindYourRecipe.Application
 			CreateMap<Category, CategoryResponseModel>();
 			CreateMap<IngredientRecipe, IngredientRecipeResponseModel>();
 			CreateMap<CategoryRecipe, CategoryRecipeResponseModel>();
+			CreateMap<User, UserResponseModel>();
 		}
 	}
 }

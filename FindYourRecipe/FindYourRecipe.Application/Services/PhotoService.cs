@@ -1,8 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using FindYourRecipe.Application.Interfaces;
-using FindYourRecipe.Application.Models;
-using FindYourRecipe.Application.Services;
+using FindYourRecipe.Contracts;
+using FindYourRecipe.Contracts.Models;
 using FindYourRecipe.DataAccess;
 using FindYourRecipe.DataAccess.Interfaces;
 
@@ -24,6 +23,11 @@ namespace FindYourRecipe.Application.Services
         {
             var photo= await Repository.CreateAsync(request.RecipeId,request.Link);
             return Mapper.Map<Photo, PhotoResponseModel>(photo);
+        }
+
+        public async Task DeleteByRecipeIdAsync(int recipeId)
+        {
+            await Repository.DeleteByRecipeIdAsync(recipeId);
         }
 
         public async Task DeteleAsync(int id)

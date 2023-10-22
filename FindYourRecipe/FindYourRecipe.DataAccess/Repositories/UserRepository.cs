@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using FindYourRecipe.DataAccess.Entities;
 using FindYourRecipe.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,23 @@ namespace FindYourRecipe.DataAccess.Repositories
 	public class UserRepository: IUserRepository
 	{
         public DataContext Database { get; }
+        public const string Salt = "gIdUs4jmHT0BhsBgUhzxqA2tzH6DRS0r";
 
         public UserRepository(DataContext database)
         {
             Database = database;
+        }
+
+        public static string sha256(string password)
+        {
+            var crypt = new System.Security.Cryptography.SHA256Managed();
+            var hash = new System.Text.StringBuilder();
+            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(password));
+            foreach (byte theByte in crypto)
+            {
+                hash.Append(theByte.ToString("x2"));
+            }
+            return hash.ToString();
         }
 
         public async Task<User> CreateAsync(string username, string name, string email, string password)
@@ -21,7 +35,7 @@ namespace FindYourRecipe.DataAccess.Repositories
                 Username = username,
                 Name = name,
                 Email = email,
-                Password = password,
+                Password = sha256(Salt+password),
                 RoleId=2
             };
             Database.Add(user);
@@ -29,7 +43,7 @@ namespace FindYourRecipe.DataAccess.Repositories
             return user;
 
         }
-
+        
         public async Task DeleteByIdAsync(int id)
         {
             Database.Remove(await Database.Users.FirstAsync(x => x.Id == id));
@@ -42,7 +56,7 @@ namespace FindYourRecipe.DataAccess.Repositories
             return list;
         }
 
-        public async Task<User> GetByUsername(string username)
+        public async Task<User?> GetByUsername(string username)
         {
             return await Database.Users
                 .Include(x=>x.Role)
@@ -54,7 +68,7 @@ namespace FindYourRecipe.DataAccess.Repositories
             var userToUpdate = await Database.Users.FirstAsync(x => x.Id == id);
             userToUpdate.Name = name;
             userToUpdate.Email = email;
-            userToUpdate.Password = password;
+            userToUpdate.Password = sha256(Salt + password);
             await Database.SaveChangesAsync();
             return userToUpdate;
         }

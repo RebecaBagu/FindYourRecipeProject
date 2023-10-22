@@ -30,7 +30,7 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             <h1 style="font-size: 20px;margin-bottom: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;Choose the ingredients you want to use in the recipe: </h1>
-            <select id="SearchBar" class="form-control" multiple="multiple" @bind="SelectedIngredients">
+            <select id="SearchBar" class="form-control" multiple="multiple">
                 @foreach (var ingredient in ingredientsList)
                 {
                     <option value="@ingredient.Id">@ingredient.Name</option>
@@ -92,7 +92,8 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        //await JS.InvokeVoidAsync("InitializeSearchBar");
+        await JS.InvokeVoidAsync("InitializeSearchBar");
+
         await JS.InvokeVoidAsync("MasonryLayout");
     }
 
@@ -107,6 +108,7 @@
 
     async Task SearchClicked()
     {
+        SelectedIngredients=await JS.InvokeAsync <string[]>("GetSearchBarValues");
         await LoadRecipes();
         this.StateHasChanged();
     }

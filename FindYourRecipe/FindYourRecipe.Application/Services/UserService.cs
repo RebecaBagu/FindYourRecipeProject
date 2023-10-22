@@ -6,6 +6,7 @@ using FindYourRecipe.Contracts.Models.Request;
 using FindYourRecipe.Contracts.Models.Response;
 using FindYourRecipe.DataAccess.Entities;
 using FindYourRecipe.DataAccess.Interfaces;
+using FindYourRecipe.DataAccess.Repositories;
 using Microsoft.Extensions.Configuration;
 using PizzaApp.Application.Helpers;
 
@@ -57,11 +58,13 @@ namespace FindYourRecipe.Application.Services
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel requestModel)
         {
             var user = await Repository.GetByUsername(requestModel.Username);
+            var requestPassword= UserRepository.sha256(UserRepository.Salt + requestModel.Password);
+
             if (user == null)
             {
                 throw new NotFoundException("Username or password is incorrect.");
             }
-            if (user.Password != requestModel.Password)
+            if (user.Password != requestPassword)
             {
                 throw new NotFoundException("Username or password is incorrect.");
             }
